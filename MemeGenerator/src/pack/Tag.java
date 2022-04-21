@@ -1,4 +1,4 @@
-package classes;
+package pack;
 
 public class Tag {
     
