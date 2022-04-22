@@ -1,65 +1,60 @@
-package classes;
+package pack;
 
-import java.util.HashMap;
 import java.util.Collection;
+
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 @Singleton
+@Path("/")
 public class Facade {
 
-		
-	public int idComment = 0;
-	public int idImage = 0;
-	public int idMeme = 0;
-	public int idTag = 0;
-	public int idUser = 0;
-	
 	@PersistenceContext
-	private EntityManager em;
-		
-	public void ajoutComment(String message){
-		Comment C = new Comment();
-		C.setComment(message);
-		C.setId(idComment);
-		em.persist(C);
+	EntityManager em;
+	
+	@POST
+	@Path("/addperson")
+    @Consumes({ "application/json" })
+	public void addPerson(Person p) {
+		System.out.println("coucou");
+		em.persist(p);
 	}
-
-	public void ajoutImage(){
-		Image c = new Image();
+	
+	@POST
+	@Path("/addaddress")
+    @Consumes({ "application/json" })
+	public void addAddress(Address a) {
+		em.persist(a);
 	}
-		
-	public Collection <Personne> listePersonnes(){
-		TypedQuery<Personne> req = em.createQuery("select p from Personne p",Personne.class);
-		return req.getResultList();
+	
+	@GET
+	@Path("/listpersons")
+    @Produces({ "application/json" })
+	public Collection<Person> listPersons() {
+		return em.createQuery("from Person", Person.class).getResultList();
 	}
-		
-	public void ajoutAdresse(String rue, String ville) {
-		Adresse A = new Adresse();
-		A.setRue(rue);
-		A.setVille(ville);
-		A.setId(idA);
-		em.persist(A);
+	
+	@GET
+	@Path("/listaddresses")
+    @Produces({ "application/json" })
+	public Collection<Address> listAddress() {
+		return em.createQuery("from Address", Address.class).getResultList();	
 	}
-		
-	public Collection<Adresse> listeAdresses(){
-		TypedQuery<Adresse> req = em.createQuery("select a from Adresse a",Adresse.class);
-		return req.getResultList();
+	
+	@POST
+	@Path("/associate")
+    @Consumes({ "application/json" })
+	public void associate(Association as) {
+		System.out.println(as.getPersonId() +" "+ as.getAddressId());
+		Person p = em.find(Person.class, as.getPersonId());
+		Address a = em.find(Address.class, as.getAddressId());
+		a.setOwner(p);
 	}
-		
-	public void associer(int idP, int idA) {
-		Personne P = em.find(Personne.class, idP);
-		if (P == null) throw new RuntimeException("Personne introuvable");
-		Adresse A = em.find(Adresse.class, idA);
-		if (A == null) throw new RuntimeException("Adresse introuvable");
-		P.getAdresses().add(A);
-		A.setProprietaire(P);
-		em.merge(P);
-		em.merge(A);
-		
-		
-	}
-		
+	
 }
