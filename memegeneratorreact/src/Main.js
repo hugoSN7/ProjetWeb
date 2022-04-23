@@ -123,7 +123,7 @@ function Associate() {
     {listP.map((p) => (
     	<>
 	<input type="radio" value={p.id}
-		checked={selectedP==p.id}
+		checked={selectedP===p.id}
 		onChange={(e) => setSelectedP(e.target.value)}/>
 	{p.firstName} {p.lastName}<br/>
 	</>
@@ -133,7 +133,7 @@ function Associate() {
     {listA.map((a) => (
     	<>
 	<input type="radio" value={a.id}
-		checked={selectedA==a.id}
+		checked={selectedA===a.id}
 		onChange={(e) => setSelectedA(e.target.value)}/>
 		{a.street} {a.city}<br/>
 	</>
