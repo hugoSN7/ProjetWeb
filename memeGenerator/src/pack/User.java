@@ -1,15 +1,24 @@
 package pack;
 
 import java.util.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+@Entity
 public class User {
 
+	@Id
+	private String pseudo;
+	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private List<Meme> listMeme;
+	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private List<Image> listImage;
-    private String pseudo;
     private String password;
     private String email;
 
+    /**
     public User(String pseudo, String password, String email){
         this.listMeme = new ArrayList<Meme>();
         this.listImage = new ArrayList<Image>();
@@ -17,12 +26,15 @@ public class User {
         this.password = password;
         this.email = email;
     }
+    */
 
+    /**
     public User(String pseudo){
         this.listMeme = new ArrayList<Meme>();
         this.listImage = new ArrayList<Image>();
         this.pseudo = pseudo;
     }
+    */
 
     public List<Meme> getListMeme() {
         return listMeme;
@@ -32,6 +44,7 @@ public class User {
         this.listMeme = listMeme;
     }
 
+    /**
     public void addMeme(Meme meme){
         this.listMeme.add(meme);
     }
@@ -39,6 +52,7 @@ public class User {
     public void removeComment(Meme meme){
         this.listMeme.remove(meme);
     }
+    */
 
     public List<Image> getListImage() {
         return listImage;
@@ -48,6 +62,7 @@ public class User {
         this.listImage = listImage;
     }
 
+    /**
     public void addImage(Image image){
         this.listImage.add(image);
     }
@@ -55,6 +70,7 @@ public class User {
     public void removeImage(Image image){
         this.listImage.remove(image);
     }
+    */
 
     public String getPseudo() {
         return pseudo;
