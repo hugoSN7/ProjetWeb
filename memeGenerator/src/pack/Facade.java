@@ -1,6 +1,10 @@
 package pack;
 
 import java.util.Collection;
+import java.awt.*;
+import java.io.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
@@ -10,6 +14,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+
+
+/**@POST quand tu veux modifier un truc 
+ * @GET quand tu veux juste afficher un truc*/
 
 @Singleton
 @Path("/")
@@ -32,6 +40,45 @@ public class Facade {
 	public void addImage(Image i) {
 		System.out.println("Image ajouté");
 		em.persist(i);
+	}
+	
+	@POST
+	@Path("/addmeme")
+    @Consumes({ "application/json" })
+	public void addMeme(Image i, String texte, int x, int y) {
+		//String paragraphe[] = texte.split(";");
+		
+		//lire l'image
+	    BufferedImage image = null;
+		try {
+			image = ImageIO.read(new File(i.getImage()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    //récupérer l'objet Graphics
+	    Graphics g = image.getGraphics();
+	    //définir le font
+	    g.setFont(g.getFont().deriveFont(25f));
+	    //afficher le texte sur les coordonnées(x=50, y=150)
+	    g.drawString(texte, x, y);
+	    g.dispose();
+	    
+	    Meme m = new Meme();
+	    String nomMeme = String.valueOf(m.getId())+".png";
+	    m.setMemepath(nomMeme);
+	    
+	    //écrire l'image sous forme d'un fichier iddumeme.png
+	    try {
+			ImageIO.write(image, "png", new File(nomMeme));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+		System.out.println("Meme ajouté");
+		em.persist(m);
 	}
 	
 	@GET
@@ -94,6 +141,7 @@ public class Facade {
 		Tag t = em.find(Tag.class, as.getTagId());
 		t.setMeme(m);
 	}
+	
 	@POST
 	@Path("/associateimagetag")
     @Consumes({ "application/json" })
@@ -103,4 +151,5 @@ public class Facade {
 		Tag t = em.find(Tag.class, as.getTagId());
 		t.setImage(i);
 	}
+	
 }

@@ -20,6 +20,7 @@ public class Meme {
     @GeneratedValue(strategy=GenerationType.AUTO)  
 	int id;
     private int likenb;
+    private String memepath;
     @OneToMany(mappedBy="Image", fetch = FetchType.EAGER)
     private List<Comment> listComment;
     @OneToMany(mappedBy="Image", fetch = FetchType.EAGER)
@@ -35,6 +36,14 @@ public class Meme {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getMemepath() {
+		return memepath;
+	}
+
+	public void setMemepath(String memepath) {
+		this.memepath = memepath;
 	}
 
 	/**
