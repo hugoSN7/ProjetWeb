@@ -2,20 +2,43 @@ package pack;
 
 import java.io.Serializable;
 
-public class Association implements Serializable {
-	int personId;
-	int addressId;
+public class Associate implements Serializable {
+
+	String userId;
+	String imageId;
+	int memeId;
+	String TagId;
+	int commentId;
 	
-	public int getPersonId() {
-		return personId;
+	public String getUserId() {
+		return userId;
 	}
-	public void setPersonId(int personId) {
-		this.personId = personId;
+	public void setUserId(String personId) {
+		this.userId = personId;
 	}
-	public int getAddressId() {
-		return addressId;
+	public String getImageId() {
+		return imageId;
 	}
-	public void setAddressId(int addressId) {
-		this.addressId = addressId;
+	public void setImageId(String imageId) {
+		this.imageId = imageId;
 	}
+	public int getMemeId() {
+		return memeId;
+	}
+	public void setMemeId(int memeId) {
+		this.memeId = memeId;
+	}
+	public String getTagId() {
+		return TagId;
+	}
+	public void setTagId(String tagId) {
+		TagId = tagId;
+	}
+	public int getCommentId() {
+		return commentId;
+	}
+	public void setCommentId(int commentId) {
+		this.commentId = commentId;
+	}
+	
 }

@@ -19,42 +19,88 @@ public class Facade {
 	EntityManager em;
 	
 	@POST
-	@Path("/addperson")
+	@Path("/adduser")
     @Consumes({ "application/json" })
-	public void addPerson(Person p) {
-		System.out.println("coucou");
-		em.persist(p);
+	public void addUser(User u) {
+		System.out.println("Utilisateur ajouté");
+		em.persist(u);
 	}
 	
 	@POST
-	@Path("/addaddress")
+	@Path("/addimage")
     @Consumes({ "application/json" })
-	public void addAddress(Address a) {
-		em.persist(a);
+	public void addImage(Image i) {
+		System.out.println("Image ajouté");
+		em.persist(i);
 	}
 	
 	@GET
-	@Path("/listpersons")
+	@Path("/listimage")
     @Produces({ "application/json" })
-	public Collection<Person> listPersons() {
-		return em.createQuery("from Person", Person.class).getResultList();
+	public Collection<Image> listImage() {
+		return em.createQuery("from Image", Image.class).getResultList();
 	}
 	
 	@GET
-	@Path("/listaddresses")
+	@Path("/listuser")
     @Produces({ "application/json" })
-	public Collection<Address> listAddress() {
-		return em.createQuery("from Address", Address.class).getResultList();	
+	public Collection<User> listUser() {
+		return em.createQuery("from User", User.class).getResultList();	
+	}
+	
+	@GET
+	@Path("/listmeme")
+    @Produces({ "application/json" })
+	public Collection<Meme> listMeme() {
+		return em.createQuery("from Meme", Meme.class).getResultList();	
 	}
 	
 	@POST
-	@Path("/associate")
+	@Path("/associateuserimage")
     @Consumes({ "application/json" })
-	public void associate(Association as) {
-		System.out.println(as.getPersonId() +" "+ as.getAddressId());
-		Person p = em.find(Person.class, as.getPersonId());
-		Address a = em.find(Address.class, as.getAddressId());
-		a.setOwner(p);
+	public void associateUserImage(Associate as) {
+		System.out.println(as.getUserId() +" "+ as.getImageId());
+		User u = em.find(User.class, as.getUserId());
+		Image i = em.find(Image.class, as.getImageId());
+		i.setUser(u);
 	}
 	
+	@POST
+	@Path("/associateusermeme")
+    @Consumes({ "application/json" })
+	public void associateUserMeme(Associate as) {
+		System.out.println(as.getUserId() +" "+ as.getMemeId());
+		User u = em.find(User.class, as.getUserId());
+		Meme m = em.find(Meme.class, as.getMemeId());
+		m.setUser(u);
+	}
+	
+	@POST
+	@Path("/associatememecomment")
+    @Consumes({ "application/json" })
+	public void associateMemeComment(Associate as) {
+		System.out.println(as.getMemeId() +" "+ as.getCommentId());
+		Meme m = em.find(Meme.class, as.getMemeId());
+		Comment c = em.find(Comment.class, as.getCommentId());
+		c.setMeme(m);
+	}
+	
+	@POST
+	@Path("/associatememetag")
+    @Consumes({ "application/json" })
+	public void associateMemeTag(Associate as) {
+		System.out.println(as.getMemeId() +" "+ as.getTagId());
+		Meme m = em.find(Meme.class, as.getMemeId());
+		Tag t = em.find(Tag.class, as.getTagId());
+		t.setMeme(m);
+	}
+	@POST
+	@Path("/associateimagetag")
+    @Consumes({ "application/json" })
+	public void associateImageTag(Associate as) {
+		System.out.println(as.getImageId() +" "+ as.getTagId());
+		Image i = em.find(Image.class, as.getImageId());
+		Tag t = em.find(Tag.class, as.getTagId());
+		t.setImage(i);
+	}
 }
