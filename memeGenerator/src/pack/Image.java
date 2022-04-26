@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,7 +21,10 @@ public class Image {
     @OneToMany(mappedBy="Image", fetch = FetchType.EAGER)
     private List<Tag> listTag;
     
-    @ManyToOne
+    @OneToOne(mappedBy = "image")
+    Brouillon brouillon;
+
+	@ManyToOne
 	@JsonIgnore
 	User user;
 
@@ -66,4 +70,20 @@ public class Image {
         this.imagePath = image;
     }
     
+    
+    public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+
+	public Brouillon getBrouillon() {
+		return brouillon;
+	}
+
+	public void setBrouillon(Brouillon brouillon) {
+		this.brouillon = brouillon;
+	}
 }

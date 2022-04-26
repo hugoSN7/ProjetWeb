@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,7 +22,8 @@ public class Brouillon {
 	int id;
 	@OneToMany(mappedBy="Image", fetch = FetchType.EAGER)
     private List<Texte> listTexte;
-	//manque un OneToOne
+	
+	@OneToOne
 	private Image image;
 	
 	public int getId() {

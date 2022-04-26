@@ -1,6 +1,7 @@
 package pack;
 
 import java.util.Collection;
+import java.util.List;
 import java.awt.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
@@ -53,39 +54,36 @@ public class Facade {
 	@POST
 	@Path("/addmeme")
     @Consumes({ "application/json" })
-	public void addMeme(Image i, String texte, int x, int y) {
-		//String paragraphe[] = texte.split(";");
+	public void addMeme(Image i, List listeTexte) throws IOException {
 		
-		//lire l'image
-	    BufferedImage image = null;
-		try {
-			image = ImageIO.read(new File(i.getImage()));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
-	    //récupérer l'objet Graphics
+		//On crée l'objet Meme
+		Meme m = new Meme();
+		//On crée l'objet BufferedImage
+		BufferedImage image = null;
+		image = ImageIO.read(new File(i.getImage()));
+		//récupérer l'objet Graphics
 	    Graphics g = image.getGraphics();
 	    //définir le font
 	    g.setFont(g.getFont().deriveFont(25f));
-	    //afficher le texte sur les coordonnées(x=50, y=150)
-	    g.drawString(texte, x, y);
-	    g.dispose();
+		
+	    //On incruste dans l'image les différents textes
+		for (int j = 0; j < listeTexte.size(); j++) {
+			Texte t = ((List<Texte>) listeTexte).get(j);
+			//afficher le texte sur les coordonnées(x=50, y=150)
+			g.drawString(t.phrase, t.x, t.y);
+			g.dispose();
+
+		}
 	    
-	    Meme m = new Meme();
+		//On rentre dans l'objet meme l'emplacement du fichier png représentant le meme
 	    String nomMeme = String.valueOf(m.getId())+".png";
 	    m.setMemepath(nomMeme);
 	    
 	    //écrire l'image sous forme d'un fichier iddumeme.png
-	    try {
-			ImageIO.write(image, "png", new File(nomMeme));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
+		ImageIO.write(image, "png", new File(nomMeme));
 		System.out.println("Meme ajouté");
+		
+		//On enregistre le meme dans la database
 		em.persist(m);
 	}
 	
@@ -105,7 +103,13 @@ public class Facade {
 		em.persist(t);
 	}
 	
-	
+	@POST
+	@Path("/addtexte")
+    @Consumes({ "application/json" })
+	public void addTexte(Texte t) {
+		System.out.println("Texte ajouté");
+		em.persist(t);
+	}
 	
 	@GET
 	@Path("/listimage")
@@ -126,6 +130,28 @@ public class Facade {
     @Produces({ "application/json" })
 	public Collection<Meme> listMeme() {
 		return em.createQuery("from Meme", Meme.class).getResultList();	
+	}
+	
+	//On récupère l'ensemble des commentaires correspondant au meme
+	@GET
+	@Path("/listcomment")
+    @Produces({ "application/json" })
+	public Collection<Comment> listComment(Meme m) {
+		return em.createQuery("SELECT * FROM Comment WHERE meme = " + String.valueOf(m.getId()), Comment.class).getResultList();	
+	}
+	
+	@GET
+	@Path("/listtagimage")
+    @Produces({ "application/json" })
+	public Collection<Tag> listTagImage(Image i) {
+		return em.createQuery("SELECT * FROM Tag WHERE image = " + i.getNom(), Tag.class).getResultList();	
+	}
+	
+	@GET
+	@Path("/listtagmeme")
+	@Produces({ "application/json" })
+	public Collection<Tag> listTagMeme(Meme m) {
+		return em.createQuery("SELECT * FROM Tag WHERE meme = " + String.valueOf(m.getId()), Tag.class).getResultList();	
 	}
 	
 	@POST
@@ -176,6 +202,16 @@ public class Facade {
 		Image i = em.find(Image.class, as.getImageId());
 		Tag t = em.find(Tag.class, as.getTagId());
 		t.setImage(i);
+	}
+	
+	@POST
+	@Path("/associatebrouillontexte")
+    @Consumes({ "application/json" })
+	public void associateBrouillonImage(Associate as) {
+		System.out.println(as.getBrouillonId() +" "+ as.getImageId());
+		Brouillon b = em.find(Brouillon.class, as.getBrouillonId());
+		Image i = em.find(Image.class, as.getTexteId());
+		i.setBrouillon(b);
 	}
 	
 	@POST
@@ -233,6 +269,14 @@ public class Facade {
     @Consumes({ "application/json" })
 	public void removeTag(Tag t) {
 		System.out.println("tag supprimé");
+		em.remove(t);
+	}
+	
+	@POST
+	@Path("/removetexte")
+    @Consumes({ "application/json" })
+	public void removeTexte(Texte t) {
+		System.out.println("texte supprimé");
 		em.remove(t);
 	}
 	
