@@ -24,14 +24,6 @@ public class Image {
 	@JsonIgnore
 	User user;
 
-    /**
-    public Image(String nom, String imagePath){
-        this.listTag = new ArrayList<Tag>();
-        this.nom = nom;
-        this.imagePath = imagePath;
-    }
-    */
-
     public List<Tag> getListTag() {
         return listTag;
     }

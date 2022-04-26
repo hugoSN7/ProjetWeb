@@ -38,8 +38,16 @@ public class Facade {
 	@Path("/addimage")
     @Consumes({ "application/json" })
 	public void addImage(Image i) {
-		System.out.println("Image ajouté");
+		System.out.println("Image ajoutée");
 		em.persist(i);
+	}
+	
+	@POST
+	@Path("/addcomment")
+    @Consumes({ "application/json" })
+	public void addComment(Comment c) {
+		System.out.println("Commentaire ajoutée");
+		em.persist(c);
 	}
 	
 	@POST
@@ -80,6 +88,24 @@ public class Facade {
 		System.out.println("Meme ajouté");
 		em.persist(m);
 	}
+	
+	@POST
+	@Path("/addimage")
+    @Consumes({ "application/json" })
+	public void addBrouillon(Brouillon b) {
+		System.out.println("Brouillon ajouté");
+		em.persist(b);
+	}
+	
+	@POST
+	@Path("/addtag")
+    @Consumes({ "application/json" })
+	public void addTag(Tag t) {
+		System.out.println("Tag ajouté");
+		em.persist(t);
+	}
+	
+	
 	
 	@GET
 	@Path("/listimage")
@@ -150,6 +176,64 @@ public class Facade {
 		Image i = em.find(Image.class, as.getImageId());
 		Tag t = em.find(Tag.class, as.getTagId());
 		t.setImage(i);
+	}
+	
+	@POST
+	@Path("/associatebrouillontexte")
+    @Consumes({ "application/json" })
+	public void associateBrouillonTexte(Associate as) {
+		System.out.println(as.getBrouillonId() +" "+ as.getTexteId());
+		Brouillon b = em.find(Brouillon.class, as.getBrouillonId());
+		Texte t = em.find(Texte.class, as.getTexteId());
+		t.setBrouillon(b);
+	}
+	
+	@POST
+	@Path("/removebrouillon")
+    @Consumes({ "application/json" })
+	public void removeBrouillon(Brouillon b) {
+		System.out.println("brouillon supprimé");
+		em.remove(b);
+	}
+	
+	@POST
+	@Path("/removeimage")
+    @Consumes({ "application/json" })
+	public void removeImage(Image i) {
+		System.out.println("image supprimée");
+		em.remove(i);
+	}
+	
+	@POST
+	@Path("/removememe")
+    @Consumes({ "application/json" })
+	public void removeMeme(Meme m) {
+		System.out.println("meme supprimé");
+		em.remove(m);
+	}
+	
+	@POST
+	@Path("/removecomment")
+    @Consumes({ "application/json" })
+	public void removeComment(Comment c) {
+		System.out.println("comment supprimé");
+		em.remove(c);
+	}
+	
+	@POST
+	@Path("/removeuser")
+    @Consumes({ "application/json" })
+	public void removeUser(User u) {
+		System.out.println("user supprimé");
+		em.remove(u);
+	}
+	
+	@POST
+	@Path("/removetag")
+    @Consumes({ "application/json" })
+	public void removeTag(Tag t) {
+		System.out.println("tag supprimé");
+		em.remove(t);
 	}
 	
 }

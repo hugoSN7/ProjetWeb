@@ -9,7 +9,21 @@ public class Associate implements Serializable {
 	int memeId;
 	String TagId;
 	int commentId;
+	int brouillonId;
+	int TexteId;
 	
+	public int getBrouillonId() {
+		return brouillonId;
+	}
+	public void setBrouillonId(int brouillonId) {
+		this.brouillonId = brouillonId;
+	}
+	public int getTexteId() {
+		return TexteId;
+	}
+	public void setTexteId(int texteId) {
+		TexteId = texteId;
+	}
 	public String getUserId() {
 		return userId;
 	}

@@ -46,15 +46,6 @@ public class Meme {
 		this.memepath = memepath;
 	}
 
-	/**
-    public Meme(String nomImage, String imagePath, String pseudo){
-        this.image = new Image(nomImage, imagePath);
-        this.user = new User(pseudo);
-        this.likenb = 0;
-        this.listComment= new ArrayList<Comment>();
-    }
-    */
-
     public int getLikenb() {
         return likenb;
     }
@@ -90,8 +81,6 @@ public class Meme {
 	public void setListTag(List<Tag> listTag) {
 		this.listTag = listTag;
 	}
-    
-    
     
     /**
     public void addComment(Comment comment){
