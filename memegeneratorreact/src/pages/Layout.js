@@ -3,6 +3,7 @@ import { Outlet, Link } from "react-router-dom";
 const Layout = () => {
   return (
     <>
+      <h1>MemeGenerator </h1>
       <nav>
         <ul>
           <li>
@@ -29,4 +30,3 @@ const Layout = () => {
 };
 
 export default Layout;
-
