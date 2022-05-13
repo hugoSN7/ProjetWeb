@@ -54,7 +54,7 @@ public class Facade {
 	@POST
 	@Path("/addmeme")
     @Consumes({ "application/json" })
-	public void addMeme(Image i, List listeTexte) throws IOException {
+	public void addMeme(Image i, List<Texte> listeTexte) throws IOException {
 		
 		//On crée l'objet Meme
 		Meme m = new Meme();
@@ -279,5 +279,14 @@ public class Facade {
 		System.out.println("texte supprimé");
 		em.remove(t);
 	}
+
+	@GET
+	@Path("/authentification")
+	@Consumes({ "application/json" })
+	public boolean authentification(String Username, String Password){
+		User pseudo = em.find(User.class , Username);
+		return(getPassword() == Password)
+	}
+
 	
 }
