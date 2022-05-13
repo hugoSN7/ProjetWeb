@@ -35,6 +35,8 @@ export function UploadImage() {
               style={isDragging ? { color: 'red' } : undefined}
               onClick={onImageUpload}
               {...dragProps}
+
+              class="uploadbtn"
             >
               Click or Drop here
             </button>
