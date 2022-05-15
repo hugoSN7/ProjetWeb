@@ -10,7 +10,7 @@ async function invokePost(method, data, successMsg, failureMsg) {
         headers: { "Content-Type": "application/json; charset=utf-8" },
         body: JSON.stringify(data)
     };
-    const res = await fetch("/memeGenerator/rest/"+method,requestOptions);
+    const res = await fetch("/MemeGenerator/rest/"+method,requestOptions);
     if (res.ok) ShowMessage(successMsg);
     else ShowMessage(failureMsg);
 }
@@ -25,6 +25,14 @@ export function UploadImage() {
     const [listImage, setListImage] = useState([]);
 
     function createUser(event) {
+        let user={};
+        user.pseudo="CedriCazanove";
+        user.password="1234";
+        user.email="cedric@mail.com";
+        invokePost("adduser", user, "user added", "pb with user");
+    }
+
+    function createPerson(event) {
         let person={};
         person.firstName="Cedric";
         person.lastName="Cazanove";
