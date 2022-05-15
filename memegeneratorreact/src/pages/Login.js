@@ -34,18 +34,18 @@ function Login (){
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  let test={};
+
+
+  const handleSubmit = async (event) => {
+    
+    event.preventDefault();
+    let test={};
     test.pseudo="test";
     test.password="123";
     test.email="reveillerg@gmail.com";
 
 
-  invokePost("adduser", test, "ajout du test fait", "ajout du test echoué")
-
-
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+    invokePost("adduser", test, "ajout du test fait", "ajout du test echoué")
     var token = loginUser(
       username,
       password
