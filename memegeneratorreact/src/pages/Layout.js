@@ -10,19 +10,19 @@ const Layout = () => {
         <ul>
           <li>
             <Link to="/home" class="urlHome">Home</Link>
-            <p class="trait1">|</p>
+            <div class="trait1"></div>
           </li>
           <li>
             <Link to="/" class="urlGenerate">Generate</Link>
-            <p class="trait2">|</p>
+            <div class="trait2"></div>
           </li>
           <li>
             <Link to="/login" class="urlLogin">Login</Link>
-            <p class="trait3">|</p>
+            <div class="trait3"></div>
           </li>
           <li>
             <Link to="/about" class="urlAbout">About</Link>
-            <p class="trait4">|</p>
+            <div class="trait4"></div>
           </li>
           <li>
             <Link to="/contact" class="urlContact">Contact</Link>

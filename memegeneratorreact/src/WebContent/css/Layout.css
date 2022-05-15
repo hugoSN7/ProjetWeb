@@ -85,24 +85,32 @@
 
 .trait1{
     position: absolute;
-    top: 65px;
+    top: 77px;
     left: 1558px;
+    height:20px;
+    border:1px solid black;
 }
 
 .trait2{
     position: absolute;
-    top: 65px;
+    top: 77px;
     left: 1658px;
+    height:20px;
+    border:1px solid black;
 }
 
 .trait3{
     position: absolute;
-    top: 65px;
+    top: 77px;
     left: 1727px;
+    height:20px;
+    border:1px solid black;
 }
 
 .trait4{
     position: absolute;
-    top: 65px;
+    top: 77px;
     left: 1800px;
+    height:20px;
+    border:1px solid black;
 }
