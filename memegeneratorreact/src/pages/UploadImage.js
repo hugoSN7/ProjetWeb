@@ -1,62 +1,58 @@
 import React from 'react';
-import ImageUploading from 'react-images-uploading';
-import '../WebContent/css/General.css';
-import '../WebContent/css/UploadImage.css';
+import { useState, useEffect } from "react";
+import ReactDOM from 'react-dom';
+
+var init=false;
+
+async function invokePost(method, data, successMsg, failureMsg) {
+    const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify(data)
+    };
+    const res = await fetch("/MemeGenerator/rest/"+method,requestOptions);
+    if (res.ok) ShowMessage(successMsg);
+    else ShowMessage(failureMsg);
+}
+
+function ShowMessage(message) {
+    alert(message);
+}
 
 export function UploadImage() {
-  const [images, setImages] = React.useState([]);
-  const maxNumber = 69;
 
-  const onChange = (imageList, addUpdateIndex) => {
-    // data for submit
-    console.log(imageList, addUpdateIndex);
-    setImages(imageList);
-  };
+    const [image, setImage] = useState();
+    const [listImage, setListImage] = useState([]);
 
-  return (
-    <div className="UploadImage">
-      <ImageUploading
-        multiple
-        value={images}
-        onChange={onChange}
-        maxNumber={maxNumber}
-        dataURLKey="data_url"
-      >
-        {({
-          imageList,
-          onImageUpload,
-          onImageRemoveAll,
-          onImageUpdate,
-          onImageRemove,
-          isDragging,
-          dragProps,
-        }) => (
-          // write your building UI
-          <div className="upload__image-wrapper">
-            <button
-              style={isDragging ? { color: 'red' } : undefined}
-              onClick={onImageUpload}
-              {...dragProps}
+    function createUser(event) {
+        let user={};
+        user.pseudo="CedriCazanove";
+        user.password="1234";
+        user.email="cedric@mail.com";
+        invokePost("adduser", user, "user added", "pb with user");
+    }
 
-              class="uploadbtn"
-            >
-              Click or Drop here
-            </button>
-            &nbsp;
-            {imageList.map((image, index) => (
-              <div key={index} className="image-item">
-                <img src={image['data_url']} alt="" width="1000" />
-                <div className="image-item__btn-wrapper">
-                  <button onClick={() => onImageUpdate(index)}>Update</button>
-                  <button onClick={() => onImageRemove(index)}>Remove</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </ImageUploading>
-    </div>
-  );
+    function createPerson(event) {
+        let person={};
+        person.firstName="Cedric";
+        person.lastName="Cazanove";
+        invokePost("addperson", person, "person added", "pb with addperson");
+    }
+
+    function handleChange(event) {
+        setImage(URL.createObjectURL(event.target.files[0]));
+    }
+
+    return (
+        <div className="UploadImage">
+        <input type="file" accept="image/*" name="image-upload" id="input" onChange={handleChange}/>
+        <br/>
+        <img src={image} width="500"/>
+        <br/>
+        <input type="text" />
+        <button onClick={() => createUser()}> Save </button>
+        </div>
+    );
 }
 
 export default UploadImage;

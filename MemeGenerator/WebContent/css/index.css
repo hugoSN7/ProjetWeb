@@ -1,0 +1,41 @@
+body {
+    background-color: blue;
+}
+
+h1 {
+    color: white;
+    background-color: blue;
+}
+
+main {
+    color: blue;
+}
+
+header {
+    background-color: blue;
+    position: fixed;
+    top: 0;
+    left: 80;
+    right: 0;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+header * {
+    display: inline;
+}
+
+header li {
+    margin: 20px;
+}
+
+header li a {
+    color: white;
+    text-decoration: none;
+}
+
+header [name] {
+    color: red;
+    text-decoration: none;
+}
