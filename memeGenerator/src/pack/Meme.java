@@ -29,6 +29,8 @@ public class Meme {
     @ManyToOne
 	@JsonIgnore
 	User user;
+    
+    
 
     public User getUser() {
 		return user;
