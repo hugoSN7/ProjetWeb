@@ -1,0 +1,49 @@
+.urlHome:link, .urlHome:visited {
+    color: black;
+    text-decoration: none;
+    display: inline-block;
+}
+  
+.urlHome:hover, .urlHome:active {
+    color: #8338ec;
+}
+
+.urlGenerate:link, .urlGenerate:visited {
+    color: black;
+    text-decoration: none;
+    display: inline-block;
+}
+  
+.urlGenerate:hover, .urlGenerate:active {
+    color: #8338ec;
+}
+
+.urlLogin:link, .urlLogin:visited {
+    color: black;
+    text-decoration: none;
+    display: inline-block;
+}
+  
+.urlLogin:hover, .urlLogin:active {
+    color: #8338ec;
+}
+
+.urlAbout:link, .urlAbout:visited {
+    color: black;
+    text-decoration: none;
+    display: inline-block;
+}
+  
+.urlAbout:hover, .urlAbout:active {
+    color: #8338ec;
+}
+
+.urlContact:link, .urlContact:visited {
+    color: black;
+    text-decoration: none;
+    display: inline-block;
+}
+  
+.urlContact:hover, .urlContact:active {
+    color: #8338ec;
+}

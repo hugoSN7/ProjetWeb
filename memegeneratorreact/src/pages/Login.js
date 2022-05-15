@@ -1,5 +1,7 @@
 import React, { useState, useEffect, Component } from "react";
 import {Link} from "react-router-dom";
+import '../WebContent/css/General.css';
+import '../WebContent/css/Login.css';
 
 var init=false;
 

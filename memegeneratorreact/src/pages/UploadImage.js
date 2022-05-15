@@ -1,5 +1,7 @@
 import React from 'react';
 import ImageUploading from 'react-images-uploading';
+import '../WebContent/css/General.css';
+import '../WebContent/css/UploadImage.css';
 
 export function UploadImage() {
   const [images, setImages] = React.useState([]);

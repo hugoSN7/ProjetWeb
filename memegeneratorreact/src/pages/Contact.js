@@ -1,4 +1,6 @@
-import '/home/ternardin/Documents/2A/ProjetWeb/memegeneratorreact/src/Design.css';
+import '../WebContent/css/General.css';
+import '../WebContent/css/Contact.css';
+
 
 const Contact = () => {
   return <h1 class="contact">Contact</h1>;

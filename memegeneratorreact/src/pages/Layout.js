@@ -1,5 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
-import '/home/ternardin/Documents/2A/ProjetWeb/memegeneratorreact/src/Design.css';
+import '../WebContent/css/General.css';
+import '../WebContent/css/Layout.css';
 
 const Layout = () => {
   return (
