@@ -22,19 +22,17 @@ async function loginUser(username,password) {
 function Login (){
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = Boolean
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const token = loginUser(
+    var token = loginUser(
       username,
       password
     );
-    setToken(token);
     if(token){
-      CleanWorker();
+      ShowMessage("OK");
     } else {
-      ShowMessage("failureMsg")
+      ShowMessage("failureMsg");
     }
   }
 
