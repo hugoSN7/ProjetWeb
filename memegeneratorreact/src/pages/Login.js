@@ -6,6 +6,17 @@ import ReactDOM from 'react-dom';
 
 var init=false;
 
+async function invokePost(method, data, successMsg, failureMsg) {
+  const requestOptions = {
+       method: "POST",
+       headers: { "Content-Type": "application/json; charset=utf-8" },
+       body: JSON.stringify(data)
+   };
+   const res = await fetch("/memeGenerator/rest/"+method,requestOptions);
+   if (res.ok) ShowMessage(successMsg);
+   else ShowMessage(failureMsg);
+}
+
 async function loginUser(username,password) {
   return fetch("/memeGenerator/rest/authentification", {
     method: 'POST',
@@ -23,8 +34,18 @@ function Login (){
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+
+
   const handleSubmit = async (event) => {
+    
     event.preventDefault();
+    let test={};
+    test.pseudo="test";
+    test.password="123";
+    test.email="reveillerg@gmail.com";
+
+
+    invokePost("adduser", test, "ajout du test fait", "ajout du test echoué")
     var token = loginUser(
       username,
       password
@@ -69,4 +90,3 @@ function CleanWorker() {
 }
 
 export default Login;
-
