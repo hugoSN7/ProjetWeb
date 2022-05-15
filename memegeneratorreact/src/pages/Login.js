@@ -2,33 +2,40 @@ import React, { useState, useEffect, Component } from "react";
 import {Link} from "react-router-dom";
 import '../WebContent/css/General.css';
 import '../WebContent/css/Login.css';
+import ReactDOM from 'react-dom';
 
 var init=false;
 
-async function invokeGet(method, failureMsg) {
-
-  const res = await fetch("/memeGenerator/rest/"+method);
-  if (res.ok) return await res.json();	
-  ShowMessage(failureMsg);
-  return null;
-}  
-
+async function loginUser(username,password) {
+  return fetch("/memeGenerator/rest/authentification", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: JSON.stringify(username,password)
+  })
+    .then(data => data.json())
+ }
 
 
 
 function Login (){
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [token, setToken] = Boolean
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const token = await loginUser(
+    const token = loginUser(
       username,
       password
     );
     setToken(token);
-    invokeGet("authentification", address, "address added", "pb with addaddress");
-    CleanWorker();
+    if(token){
+      CleanWorker();
+    } else {
+      ShowMessage("failureMsg")
+    }
   }
 
 
@@ -62,4 +69,6 @@ function ShowMessage(message) {
 function CleanWorker() {
   ReactDOM.render("", document.getElementById("Worker"));
 }
+
+export default Login;
 
