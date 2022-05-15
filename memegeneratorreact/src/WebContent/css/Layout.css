@@ -47,3 +47,62 @@
 .urlContact:hover, .urlContact:active {
     color: #8338ec;
 }
+
+.urlHome{
+    position: absolute;
+    top: 80px;
+    left: 1500px;
+    font-size: 1.2em;
+}
+
+.urlGenerate{
+    position: absolute;
+    top: 80px;
+    left: 1570px;
+    font-size: 1.2em;
+}
+
+.urlLogin{
+    position: absolute;
+    top: 80px;
+    left: 1670px;
+    font-size: 1.2em;
+}
+
+.urlAbout{
+    position: absolute;
+    top: 80px;
+    left: 1740px;
+    font-size: 1.2em;
+}
+
+.urlContact{
+    position: absolute;
+    top: 80px;
+    left: 1810px;
+    font-size: 1.2em;
+}
+
+.trait1{
+    position: absolute;
+    top: 65px;
+    left: 1558px;
+}
+
+.trait2{
+    position: absolute;
+    top: 65px;
+    left: 1658px;
+}
+
+.trait3{
+    position: absolute;
+    top: 65px;
+    left: 1727px;
+}
+
+.trait4{
+    position: absolute;
+    top: 65px;
+    left: 1800px;
+}

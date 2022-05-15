@@ -11,5 +11,10 @@
 	<classpathentry kind="lib" path="C:/Users/revei/OneDrive/Bureau/appli web/ProjetWeb/JARFiles/jboss-ejb-api_3.2_spec-1.0.0.Final-redhat-1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/revei/OneDrive/Bureau/appli web/ProjetWeb/JARFiles/jboss-jaxrs-api_2.0_spec-1.0.0.Final-redhat-1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/revei/OneDrive/Bureau/appli web/ProjetWeb/JARFiles/jboss-servlet-api_3.1_spec-1.0.0.Final-redhat-1.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/hibernate-jpa-2.1-api-1.0.0.Final-redhat-1.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/jackson-annotations-2.5.4.redhat-1.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/jboss-ejb-api_3.2_spec-1.0.0.Final-redhat-1.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/jboss-jaxrs-api_2.0_spec-1.0.0.Final-redhat-1.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/jboss-servlet-api_3.1_spec-1.0.0.Final-redhat-1.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
