@@ -285,7 +285,8 @@ public class Facade {
 	@Consumes({ "application/json" })
 	public boolean authentification(String Username, String Password){
 		User pseudo = em.find(User.class , Username);
-		return(getPassword() == Password)
+		if (pseudo == null) {return false}
+		else {return(pseudo.getPassword() == Password)}
 	}
 
 	
