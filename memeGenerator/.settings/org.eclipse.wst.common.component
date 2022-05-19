@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="memeGenerator">
+    <wb-module deploy-name="MemeGenerator">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="java-output-path" value="/memeGenerator/build"/>
-        <property name="context-root" value="memeGenerator"/>
+        <property name="context-root" value="MemeGenerator"/>
+        <property name="java-output-path" value="/MemeGenerator/build"/>
     </wb-module>
 </project-modules>
