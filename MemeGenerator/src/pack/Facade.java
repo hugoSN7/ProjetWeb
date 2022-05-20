@@ -27,8 +27,6 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartOutput;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 
 /**@POST quand tu veux modifier un truc 
