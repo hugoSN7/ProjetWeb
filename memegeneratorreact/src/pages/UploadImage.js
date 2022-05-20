@@ -2,55 +2,59 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import ReactDOM from 'react-dom';
 
-var init=false;
+function ShowMessage(message) {
+    alert(message);
+}
 
-async function invokePost(method, data, successMsg, failureMsg) {
+async function invokePostForFile(method, file, successMsg, failureMsg) {
+    const formData = new FormData();
+
+    formData.append("name", file.name);
+    formData.append("file", file);
+
     const requestOptions = {
         method: "POST",
-        headers: { "Content-Type": "application/json; charset=utf-8" },
-        body: JSON.stringify(data)
+        body: formData
     };
     const res = await fetch("/MemeGenerator/rest/"+method,requestOptions);
     if (res.ok) ShowMessage(successMsg);
     else ShowMessage(failureMsg);
 }
 
-function ShowMessage(message) {
-    alert(message);
+async function invokeGetForFile(method, failureMsg) {
+    const res = await fetch("/MemeGenerator/rest/"+method);
+    if (res.ok) return await res.formData();
+    ShowMessage(failureMsg);
+    return null;
 }
 
 export function UploadImage() {
 
     const [image, setImage] = useState();
-    const [listImage, setListImage] = useState([]);
-
-    function createUser(event) {
-        let user={};
-        user.pseudo="CedriCazanove";
-        user.password="1234";
-        user.email="cedric@mail.com";
-        invokePost("adduser", user, "user added", "pb with user");
-    }
-
-    function createPerson(event) {
-        let person={};
-        person.firstName="Cedric";
-        person.lastName="Cazanove";
-        invokePost("addperson", person, "person added", "pb with addperson");
-    }
+    const [loadImage, setLoadImage] = useState([]);
+    const [file, setFile] = useState();
+    var fileName = "";
 
     function handleChange(event) {
         setImage(URL.createObjectURL(event.target.files[0]));
+        var files = event.target.files;
+        setFile(files[0]);
+    }
+
+    function loadAllImage() {
+        invokeGetForFile("listimage", "pb with load image").then(data => setImage(URL.createObjectURL(data.get("file"))));
     }
 
     return (
         <div className="UploadImage">
-        <input type="file" accept="image/*" name="image-upload" id="input" onChange={handleChange}/>
+        <input type="file" name="image-upload" id="input" onChange={handleChange}/>
         <br/>
         <img src={image} width="500"/>
         <br/>
         <input type="text" />
-        <button onClick={() => createUser()}> Save </button>
+        <button onClick={() => invokePostForFile("addimage", file, "image added", "pb with image")}> Save </button>
+        <button onClick={() => loadAllImage()}> Load </button>
+        <img src={loadImage[0]} width="500" />
         </div>
     );
 }
