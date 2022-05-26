@@ -4,21 +4,26 @@ import ReactDOM from 'react-dom';
 import Popup from '../component/Popup';
 import GenerateYourMeme from '../component/GenerateYourMeme';
 
+//pour ne faire qu'une fois un GET request
 var init = false;
 
 let image;
 let imageUrl;
 
+//pour afficher ou non la demande de si on peut enregistrer un template utiliser par l'utilisateur
 var isYourTemplate = false;
 
+//pop une alerte
 function ShowAlert(message) {
     alert(message);
 }
 
+//afficher un msg
 function ShowMessage(message) {
     ReactDOM.render(<p>{message}</p>, document.getElementById("Message"));
 }
 
+//communiquer avec le serveur jboss
 async function invokePostForFile(method, file, tag, successMsg, failureMsg) {
     const formData = new FormData();
 
@@ -35,6 +40,7 @@ async function invokePostForFile(method, file, tag, successMsg, failureMsg) {
     else ShowMessage(failureMsg);
 }
 
+//communiquer avec le serveur jboss
 async function invokeGet(method, failureMsg) {
     const res = await fetch("/MemeGenerator/rest/"+method);
     if (res.ok) return await res.json();
@@ -42,6 +48,7 @@ async function invokeGet(method, failureMsg) {
     return null;
 }
 
+//appel a la bdd et lister tous les templates
 function List() {
     const [list, setList] = useState([]);
     var canvas = document.getElementById("canvas-mm-preview");
@@ -64,6 +71,7 @@ function List() {
     )
 }
 
+//Permet de selectionner le template parmi la liste de tous les templates et update le canvas
 function YourTemplate(l) {
     CleanWorker();
     var x = document.getElementById(l);
@@ -71,14 +79,17 @@ function YourTemplate(l) {
     document.getElementById("idMemeContent").value = '';
 }
 
+//clean la partie Upload
 function CleanWorker() {
     ReactDOM.render("", document.getElementById("Upload"));
 }
 
+//clean la partie mm-setting
 function CleanMain() {
     ReactDOM.render("", document.getElementById("mm-setting"));
 }
 
+//update le canvas
 function updateMMPreview(url, text) {
     var canvas = document.getElementById("canvas-mm-preview");
     var ctx = canvas.getContext("2d");
@@ -110,6 +121,7 @@ function updateMMPreview(url, text) {
     ctx.fillText(text, width / 2, height - yOffset);
 }
 
+//effacer le canvas
 function clearCanvas() {
     var canvas = document.getElementById("canvas-mm-preview");
     var ctx = canvas.getContext("2d");
@@ -117,17 +129,27 @@ function clearCanvas() {
     canvas.width = 0;
 }
 
+function test() {
+    var loc = document.location.pathname;
+    var dir = loc.substring(0, loc.lastIndexOf('/'));
+    ShowMessage(loc);
+}
+
 function UploadPicture() {
 
+    //recuperer la ref de la balise qui permet d'ouvrir les files
     const hiddenFileInput = React.useRef(null);
 
+    //handler pour lorsque le button Add your picture est click on ouvre la recherche de file
     const handleClick = event => {
         hiddenFileInput.current.click();
     }
 
+    //enregistrer le fichier que l'utilisateur charge qlq part
     const [file, setFile] = useState();
     var fileName = "";
 
+    //handler lorsqu'un fichier est upload sur la page
     const handleChange = (event) => {
         event.preventDefault();
         const imageDataUrl = URL.createObjectURL(event.target.files[0]);
@@ -135,6 +157,7 @@ function UploadPicture() {
         image = new Image();
         image.src = imageDataUrl;
         isYourTemplate = !isYourTemplate;
+        //une fois l'image chargé, on l'envoie sur le canvas
         image.onload = function() {
             updateMMPreview(image.src, '');
         }
@@ -143,41 +166,46 @@ function UploadPicture() {
         CleanWorker();
     }
 
+    //handler qui va se trigger des que du texte est entrain ds la zone de texte pour ecrire un texte sur l'image
     const handleChangeTextArea = (event) => {
         updateMMPreview(imageUrl, event.target.value);
     }
 
+    //permet d'appeler la function qui va lister tous les templates
     const list = () => {
         init = true;
         ReactDOM.render(<List />, document.getElementById("Upload"));
         //{isOpen && <Popup handleClose={togglePopup} content={<List init={true}/>}/>}
     }
 
-    const [isOpen, setIsOpen] = useState(false);
-
-    const togglePopup = () => {
-        setIsOpen(!isOpen);
-    }
-
+    //variable utile a la creation d'un meme
+    //decision est un bool pour demander si l'on peut enregistrer ou noon le template qu'à upload le user
     const [memeName, setMemeName] = useState();
     const [decision, setDecision] = useState(false);
     const [tag, setTag] = useState([]);
 
+    //Comportement du bouton Generate
     const handleGenerate = (event) => {
+        //Recupere le canvas où est visualisé le futur meme
         var canvas = document.getElementById("canvas-mm-preview");
         var url = canvas.toDataURL("image/png");
         let newFile;
+        //On en fait un fichier
         canvas.toBlob((blob) => {
             if (memeName == null) {
+                //si aucun nom n'a été donné, on en donne un par defaut
                 setMemeName("default");
             }
             newFile = new File([blob], memeName + ".jpg", { type: "image/jpeg"})
             ShowMessage(newFile.name)
+            //on envoie à la bdd le meme crée
             invokePostForFile("addimage", newFile, null, "image added", "pb with image");
+            //on nettoie les champs
             document.getElementById("idMemeName").value = '';
             document.getElementById("idTag").value = '';
             document.getElementById("idMemeContent").value = '';
         }, 'image.jpeg');
+        //on nettoie les variables
         setMemeName();
         clearCanvas();
         CleanWorker();
@@ -196,12 +224,14 @@ function UploadPicture() {
         <div id="Upload">
         </div>
 
+        {/*Tout ce qui permet de visualiser le meme*/}
         <div id="mm-preview">
         <canvas class="mm-canv" width="0" height="0" id="canvas-mm-preview"></canvas>
         <div class="drag-box-text" id="mm-text">
         </div>
         </div>
 
+        {/*Tout ce qui gere la partie pour le contenu du meme */}
         <div id="mm-setting">
         <button onClick={handleClick}> Add your Picture </button>
         <button onClick={() => list()}> Load Template </button>
@@ -212,7 +242,7 @@ function UploadPicture() {
         </div>
         </div>
 
-
+        {/*Tout ce qui gere la partie pour generer le meme */}
         <div id="generate">
         Give a name to your meme
         <br/>
@@ -230,6 +260,10 @@ function UploadPicture() {
             </>
         }
         <button onClick={handleGenerate}> Generate </button>
+        </div>
+
+        <div id="test">
+        <button onClick={() => test("Test")}> Test </button>
         </div>
         </>
     );
