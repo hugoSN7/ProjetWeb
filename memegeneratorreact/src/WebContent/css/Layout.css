@@ -1,116 +1,31 @@
-.urlHome:link, .urlHome:visited {
-    color: black;
-    text-decoration: none;
-    display: inline-block;
+ul{
+    list-style-type: none;
+    font-size: 0;
+    position: absolute;
+    top: 40px;
+    right: 10px;
 }
-  
-.urlHome:hover, .urlHome:active {
+
+ul li{
+    display: inline-block;
+    font-size: 20px;
+}
+
+.url {
+  border-right: 2px solid #e76f51;
+  padding: 4px;
+}
+
+.lasturl {
+    padding: 4px;
+}
+
+.url:hover, .url:active, .lasturl:link, .lasturl:visited{
     color: #8338ec;
 }
 
-.urlGenerate:link, .urlGenerate:visited {
-    color: black;
+.url:link, .url:visited, .lasturl:link, .lasturl:visited {
+    color: #e9c46a;
     text-decoration: none;
     display: inline-block;
-}
-  
-.urlGenerate:hover, .urlGenerate:active {
-    color: #8338ec;
-}
-
-.urlLogin:link, .urlLogin:visited {
-    color: black;
-    text-decoration: none;
-    display: inline-block;
-}
-  
-.urlLogin:hover, .urlLogin:active {
-    color: #8338ec;
-}
-
-.urlAbout:link, .urlAbout:visited {
-    color: black;
-    text-decoration: none;
-    display: inline-block;
-}
-  
-.urlAbout:hover, .urlAbout:active {
-    color: #8338ec;
-}
-
-.urlContact:link, .urlContact:visited {
-    color: black;
-    text-decoration: none;
-    display: inline-block;
-}
-  
-.urlContact:hover, .urlContact:active {
-    color: #8338ec;
-}
-
-.urlHome{
-    position: absolute;
-    top: 80px;
-    left: 1500px;
-    font-size: 1.2em;
-}
-
-.urlGenerate{
-    position: absolute;
-    top: 80px;
-    left: 1570px;
-    font-size: 1.2em;
-}
-
-.urlLogin{
-    position: absolute;
-    top: 80px;
-    left: 1670px;
-    font-size: 1.2em;
-}
-
-.urlAbout{
-    position: absolute;
-    top: 80px;
-    left: 1740px;
-    font-size: 1.2em;
-}
-
-.urlContact{
-    position: absolute;
-    top: 80px;
-    left: 1810px;
-    font-size: 1.2em;
-}
-
-.trait1{
-    position: absolute;
-    top: 77px;
-    left: 1558px;
-    height:20px;
-    border:1px solid black;
-}
-
-.trait2{
-    position: absolute;
-    top: 77px;
-    left: 1658px;
-    height:20px;
-    border:1px solid black;
-}
-
-.trait3{
-    position: absolute;
-    top: 77px;
-    left: 1727px;
-    height:20px;
-    border:1px solid black;
-}
-
-.trait4{
-    position: absolute;
-    top: 77px;
-    left: 1800px;
-    height:20px;
-    border:1px solid black;
 }
