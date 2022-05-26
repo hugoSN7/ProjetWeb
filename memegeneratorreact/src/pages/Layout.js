@@ -5,7 +5,7 @@ import '../WebContent/css/Layout.css';
 const Layout = () => {
   return (
     <>
-      <h1 class="titre">MemeGenerator </h1>
+      <h1 id="header" class="titre">MemeGenerator </h1>
       <nav>
         <ul>
           <li>
