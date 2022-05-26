@@ -218,6 +218,7 @@ function UploadPicture() {
 
     return (
         <>
+
         <div id="Message">
         </div>
 
@@ -233,8 +234,8 @@ function UploadPicture() {
 
         {/*Tout ce qui gere la partie pour le contenu du meme */}
         <div id="mm-setting">
-        <button onClick={handleClick}> Add your Picture </button>
-        <button onClick={() => list()}> Load Template </button>
+        <button class="button" onClick={handleClick}> Add your Picture </button>
+        <button class="button" onClick={() => list()}> Load Template </button>
         <input type="file" name="image-upload" id="input" onChange={handleChange} style={{display: 'none'}} ref={hiddenFileInput}/>
         <br/>
         <div class="box-edit">
@@ -243,7 +244,7 @@ function UploadPicture() {
         </div>
 
         {/*Tout ce qui gere la partie pour generer le meme */}
-        <div id="generate">
+        <div id="generate" class="texte">
         Give a name to your meme
         <br/>
         <input type="text" value={memeName} id="idMemeName" onChange={(e) => setMemeName(e.target.value)}/><br/>
@@ -259,7 +260,7 @@ function UploadPicture() {
             <br/>
             </>
         }
-        <button onClick={handleGenerate}> Generate </button>
+        <button class="button" onClick={handleGenerate}> Generate </button>
         </div>
 
         <div id="test">
