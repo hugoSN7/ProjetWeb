@@ -3,7 +3,7 @@ import { useState, useEffect, useLocation } from "react";
 import ReactDOM from 'react-dom';
 import Popup from '../component/Popup';
 import GenerateYourMeme from '../component/GenerateYourMeme';
-import '../WebContent/css/UploadImage.css';
+import '../WebContent/css/UploadPicture.css';
 import '../WebContent/css/General.css';
 
 
@@ -268,6 +268,7 @@ function UploadPicture() {
 
         <div id="test">
         <button onClick={() => test("Test")}> Test </button>
+        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>
         </div>
         </>
     );
