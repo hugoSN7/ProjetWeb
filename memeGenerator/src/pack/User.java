@@ -11,10 +11,6 @@ public class User {
 
 	@Id
 	private String pseudo;
-	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
-    private List<Meme> listMeme;
-	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
-    private List<Image> listImage;
     private String password;
     private String email;
 
@@ -36,14 +32,6 @@ public class User {
     }
     */
 
-    public List<Meme> getListMeme() {
-        return listMeme;
-    }
-
-    public void setListMeme(List<Meme> listMeme) {
-        this.listMeme = listMeme;
-    }
-
     /**
     public void addMeme(Meme meme){
         this.listMeme.add(meme);
@@ -53,14 +41,6 @@ public class User {
         this.listMeme.remove(meme);
     }
     */
-
-    public List<Image> getListImage() {
-        return listImage;
-    }
-
-    public void setListImage(List<Image> listImage) {
-        this.listImage = listImage;
-    }
 
     /**
     public void addImage(Image image){

@@ -9,6 +9,8 @@
         <jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
         
         <class>pack.User</class>
+        <class>pack.Picture</class>
+        <class>pack.Tag</class>
         
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />

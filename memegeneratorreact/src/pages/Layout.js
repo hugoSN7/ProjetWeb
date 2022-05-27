@@ -5,27 +5,23 @@ import '../WebContent/css/Layout.css';
 const Layout = () => {
   return (
     <>
-      <h1 class="titre">MemeGenerator </h1>
+      <h1 id="header" class="titre">MemeGenerator </h1>
       <nav>
         <ul>
           <li>
-            <Link to="/home" class="urlHome">Home</Link>
-            <div class="trait1"></div>
+            <Link to="/home" class="url">Home</Link>
           </li>
           <li>
-            <Link to="/" class="urlGenerate">Generate</Link>
-            <div class="trait2"></div>
+            <Link to="/" class="url">Generate</Link>
           </li>
           <li>
-            <Link to="/login" class="urlLogin">Login</Link>
-            <div class="trait3"></div>
+            <Link to="/login" class="url">Login</Link>
           </li>
           <li>
-            <Link to="/about" class="urlAbout">About</Link>
-            <div class="trait4"></div>
+            <Link to="/about" class="url">About</Link>
           </li>
           <li>
-            <Link to="/contact" class="urlContact">Contact</Link>
+            <Link to="/contact" class="lasturl">Contact</Link>
           </li>
         </ul>
       </nav>

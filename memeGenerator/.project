@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>memeGenerator</name>
+	<name>MemeGenerator</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -29,7 +29,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1649511709866</id>
+			<id>1653481538693</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
