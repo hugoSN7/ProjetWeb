@@ -1,3 +1,4 @@
+import React, { Component }  from 'react';
 import '../WebContent/css/General.css';
 import '../WebContent/css/Contact.css';
 

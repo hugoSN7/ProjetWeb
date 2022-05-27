@@ -1,5 +1,6 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { Component }  from 'react';
 import Layout from "./pages/Layout";
 import Generate from "./pages/Generate";
 import About from "./pages/About";

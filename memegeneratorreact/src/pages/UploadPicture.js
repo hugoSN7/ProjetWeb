@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component }  from 'react';
 import { useState, useEffect, useLocation } from "react";
 import ReactDOM from 'react-dom';
 import Popup from '../component/Popup';
