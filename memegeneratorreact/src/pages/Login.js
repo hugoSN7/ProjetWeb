@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Component } from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import '../WebContent/css/General.css';
 import '../WebContent/css/Login.css';
 import ReactDOM from 'react-dom';
@@ -7,16 +7,7 @@ import ReactDOM from 'react-dom';
 function ShowMessage(message) {
   alert(message);}
 
-async function invokePost(method, data, successMsg, failureMsg) {
-  const requestOptions = {
-       method: "POST",
-       headers: { "Content-Type": "application/json; charset=utf-8" },
-       body: JSON.stringify(data)
-   };
-   const res = await fetch("/MemeGenerator/rest/"+method,requestOptions);
-   if (res.ok) ShowMessage(successMsg);
-   else ShowMessage(failureMsg);
-}
+
 
 async function loginUser(method,credentials) {
   const res = await fetch("/MemeGenerator/rest/"+method, {
@@ -27,13 +18,14 @@ async function loginUser(method,credentials) {
     body: JSON.stringify(credentials)
   });
   if (res.ok) {
-    ShowMessage("on est dans login user2");
     return await res.json();
   } else {
-    ShowMessage("requete envoyé mais erreur")
+    ShowMessage("erreur")
     return null;
   }
  }
+
+
 
 
 
@@ -42,18 +34,17 @@ export function Login (){
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("token non modifié");
+  let navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     
     event.preventDefault();
-    let test={
-     pseudo : "tests",
-     password : "123",
-     email : "reveillerg@gmail.com"};
-    invokePost("adduser", test, "ajout du test fait", "ajout du test echoué");
-
     loginUser("authentification",{username,password}).then(data => setToken(data));
     ShowMessage(token);
+  }
+
+  const signup = () =>{
+    navigate("/signup");
   }
 
 
@@ -72,10 +63,11 @@ export function Login (){
       <div>
         <button type="submit">Sign in</button>
       </div>
+      <div>
+        <button type="click" onClick={signup}>sign up</button>
+      </div>
     </form>
-    <form>
-    <input type="button"  onclick="window.location.href = 'https://www.google.fr';" value="sign up" />
-    </form>
+    
     </>
   
   

@@ -1,7 +1,7 @@
 import '../WebContent/css/General.css';
 import '../WebContent/css/Signup.css';
 import React, { useState, useEffect, Component } from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import ReactDOM from 'react-dom';
 
 function ShowMessage(message) {
@@ -23,6 +23,7 @@ export function Signup (){
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [emails, setEmail] = useState("");
+  let navigate = useNavigate();
 
 
   const handleSubmit = async (event) => {
@@ -34,6 +35,7 @@ export function Signup (){
      email : emails
     };
     invokePost("adduser", user, "ajout de l'user fait", "ajout du test echoué"); 
+    navigate("/login");
   }
   return (
   <><h1>Sign Up</h1>
