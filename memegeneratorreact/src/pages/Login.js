@@ -1,7 +1,5 @@
 import React, { useState, useEffect, Component } from "react";
 import {Link} from "react-router-dom";
-import '../WebContent/css/General.css';
-import '../WebContent/css/Login.css';
 import ReactDOM from 'react-dom';
 
 var init=false;
@@ -37,7 +35,7 @@ function Login (){
 
 
   const handleSubmit = async (event) => {
-    
+
     event.preventDefault();
     let test={};
     test.pseudo="test";
@@ -72,14 +70,14 @@ function Login (){
         <p class="texte">Password</p>
         <input type="password" onChange={(e) => setPassword(e.target.value)} />
     </label>
-    
+
         <button type="submit" id="logbutton" class="button">Submit</button>
     </div>
   </form>
 </>
-  
-  
-  
+
+
+
   )
 }
 
