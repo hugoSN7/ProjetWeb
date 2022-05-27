@@ -1,0 +1,75 @@
+@font-face {
+    /* font-family: "Devilish One";
+    src: local("Devilish One"),
+        url(../../police/Devilish-StyleOne.ttf); */
+    /* font-family: "Fresh Fruit";
+    src: local("Fresh Fruit"),
+        url(../../police/FreshFruit.ttf);*/
+    font-family: "South Australia";
+    src: local("South Australia"),
+        url(../../police/SouthAustraliaTTF.ttf);
+    font-weight: bold;
+}
+
+
+body {
+    background-color: #55D5E0;
+    color: black;
+    font-family: Arial;
+    text-align: left;
+    margin:0;
+    padding:0;
+}
+                
+.titre {
+    /* text-shadow:#231c86 2.5px 2.5px 0,#FE9063 5px 5px 0,#27C7D4 7.5px 7.5px 0; */
+    color:#F6B12D;
+    text-align: center;
+    position: relative;
+    font-size:16px;
+    font-family: "South Australia", serif;
+
+}
+
+#header {
+    height: 90px;
+    background:#335F8A; 
+    text-align: left;
+    padding: 15px;
+    margin: 0px;
+    width:auto;
+    left: 0;
+    right: 0;
+    line-height: 80px;
+    border: #EA5863;
+}
+
+.button {
+    /* margin: 15px; */
+    font-family: 'Open Sans';
+    color: #e76f51;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: #ffffff;
+    padding: 20px;
+    border: 4px solid #e76f51;
+    display: inline-block;
+    transition: all 0.4s ease 0s;
+}
+  
+.button:hover {
+    color: #ffffff;
+    background: #F6B12D;
+    border-color: #e76f51;
+    transition: all 0.4s ease 0s;
+}
+
+.texte{
+    color:#F6B12D;
+    font-size:16px;
+}
+
+
+
+
+  
