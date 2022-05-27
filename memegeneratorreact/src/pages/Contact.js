@@ -1,3 +1,5 @@
+import '../WebContent/css/General.css';
+import '../WebContent/css/Contact.css';
 
 
 const Contact = () => {

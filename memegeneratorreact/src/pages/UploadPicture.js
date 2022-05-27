@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import Popup from '../component/Popup';
 import GenerateYourMeme from '../component/GenerateYourMeme';
 import '../WebContent/css/UploadImage.css';
+import '../WebContent/css/General.css';
 
 
 //pour ne faire qu'une fois un GET request
