@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import ReactDOM from 'react-dom';
+import '../WebContent/css/UploadImage.css';
 
 var init=false;
 
@@ -51,7 +52,9 @@ export function UploadImage() {
         <br/>
         <input type="text" />
         <button onClick={() => createUser()}> Save </button>
+        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>
         </div>
+
     );
 }
 
