@@ -4,7 +4,8 @@ import '../WebContent/css/General.css';
 import '../WebContent/css/Login.css';
 import ReactDOM from 'react-dom';
 
-var init=false;
+function ShowMessage(message) {
+  alert(message);}
 
 async function invokePost(method, data, successMsg, failureMsg) {
   const requestOptions = {
@@ -12,49 +13,47 @@ async function invokePost(method, data, successMsg, failureMsg) {
        headers: { "Content-Type": "application/json; charset=utf-8" },
        body: JSON.stringify(data)
    };
-   const res = await fetch("/memeGenerator/rest/"+method,requestOptions);
+   const res = await fetch("/MemeGenerator/rest/"+method,requestOptions);
    if (res.ok) ShowMessage(successMsg);
    else ShowMessage(failureMsg);
 }
 
-async function loginUser(username,password) {
-  return fetch("/memeGenerator/rest/authentification", {
+async function loginUser(method,credentials) {
+  const res = await fetch("/MemeGenerator/rest/"+method, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json; charset=utf-8'
     },
-    body: JSON.stringify(username,password)
-  })
-    .then(data => data.json())
+    body: JSON.stringify(credentials)
+  });
+  if (res.ok) {
+    ShowMessage("on est dans login user2");
+    return await res.json();
+  } else {
+    ShowMessage("requete envoyé mais erreur")
+    return null;
+  }
  }
 
 
 
-function Login (){
+export function Login (){
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-
+  const [token, setToken] = useState("token non modifié");
 
   const handleSubmit = async (event) => {
     
     event.preventDefault();
-    let test={};
-    test.pseudo="test";
-    test.password="123";
-    test.email="reveillerg@gmail.com";
+    let test={
+     pseudo : "tests",
+     password : "123",
+     email : "reveillerg@gmail.com"};
+    invokePost("adduser", test, "ajout du test fait", "ajout du test echoué");
 
-
-    invokePost("adduser", test, "ajout du test fait", "ajout du test echoué")
-    var token = loginUser(
-      username,
-      password
-    );
-    if(token){
-      ShowMessage("OK");
-    } else {
-      ShowMessage("failureMsg");
-    }
+    loginUser("authentification",{username,password}).then(data => setToken(data));
+    ShowMessage(token);
   }
 
 
@@ -71,22 +70,17 @@ function Login (){
         <input type="password" onChange={(e) => setPassword(e.target.value)} />
       </label>
       <div>
-        <button type="submit">Submit</button>
+        <button type="submit">Sign in</button>
       </div>
+    </form>
+    <form>
+    <input type="button"  onclick="window.location.href = 'https://www.google.fr';" value="sign up" />
     </form>
     </>
   
   
   
-  )
-}
-
-function ShowMessage(message) {
-  ReactDOM.render(<p>{message}</p>, document.getElementById("Message"));
-}
-
-function CleanWorker() {
-  ReactDOM.render("", document.getElementById("Worker"));
+  );
 }
 
 export default Login;

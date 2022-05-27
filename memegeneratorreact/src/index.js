@@ -6,6 +6,7 @@ import About from "./pages/About";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Contact from "./pages/Contact";
+import Signup from "./pages/Signup";
 import NoPage from "./pages/NoPage";
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="login" element={<Login />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="signup" element={<Signup />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
