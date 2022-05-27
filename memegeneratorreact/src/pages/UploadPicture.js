@@ -3,6 +3,8 @@ import { useState, useEffect, useLocation } from "react";
 import ReactDOM from 'react-dom';
 import Popup from '../component/Popup';
 import GenerateYourMeme from '../component/GenerateYourMeme';
+import '../WebContent/css/UploadImage.css';
+
 
 //pour ne faire qu'une fois un GET request
 var init = false;
