@@ -27,12 +27,13 @@ function ShowMessage(message) {
 }
 
 //communiquer avec le serveur jboss
-async function invokePostForFile(method, file, tag, successMsg, failureMsg) {
+async function invokePostForFile(method, file, tag, isMeme, successMsg, failureMsg) {
     const formData = new FormData();
 
     formData.append("name", file.name);
     formData.append("file", file);
     formData.append("tag", tag);
+    formData.append("isMeme", isMeme);
 
     const requestOptions = {
         method: "POST",
@@ -59,11 +60,11 @@ function List() {
 
     if (init) {
         init = false;
-        invokeGet("listimage", "pb with listimage").then(data => setList(data));
+        invokeGet("listtemplate", "pb with listimage").then(data => setList(data));
     }
 
     var templateList = list.map(function(l){
-        return <img src={require('../db/' + l.namePicture.toString())} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
+        return <img src={require('../db/template/' + l.namePicture.toString())} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
     })
 
     return (
@@ -202,7 +203,7 @@ function UploadPicture() {
             newFile = new File([blob], memeName + ".jpg", { type: "image/jpeg"})
             ShowMessage(newFile.name)
             //on envoie à la bdd le meme crée
-            invokePostForFile("addimage", newFile, null, "image added", "pb with image");
+            invokePostForFile("addimage", newFile, null, true, "image added", "pb with image");
             //on nettoie les champs
             document.getElementById("idMemeName").value = '';
             document.getElementById("idTag").value = '';
@@ -213,7 +214,7 @@ function UploadPicture() {
         clearCanvas();
         CleanWorker();
         if (decision) {
-            invokePostForFile("addimage", file, tag, "image added", "pb with image");
+            invokePostForFile("addimage", file, tag, false, "image added", "pb with image");
             setDecision(false);
             setTag();
         }
@@ -255,19 +256,18 @@ function UploadPicture() {
             <>
             Can we keep your template ?
             <br/>
-            <input type="checkbox" id="decision" value={decision} checked={decision} onChange={(e) => setDecision(e.target.value)}/>
+            <input type="checkbox" id="decision" checked={decision} onChange={(e) => setDecision(e.target.value)}/>
             <label for="decision">Yes</label><br/>
-            Give it some tags
-            <br/>
-            <input type="text" id="idTag" value={tag} onChange={(e) => setTag(e.target.value)}/><br/>
             <br/>
             </>
         }
+        Give it some tags
+        <br/>
+        <input type="text" id="idTag" value={tag} onChange={(e) => setTag(e.target.value)}/><br/>
         <button class="button" onClick={handleGenerate}> Generate </button>
         </div>
 
         <div id="test">
-        <button onClick={() => test("Test")}> Test </button>
         <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>
         </div>
         </>
