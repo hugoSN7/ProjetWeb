@@ -186,23 +186,22 @@ function UploadPicture() {
     const [memeName, setMemeName] = useState();
     const [decision, setDecision] = useState(false);
     const [tag, setTag] = useState([]);
-
-    //Comportement du bouton Generate
-    const handleGenerate = (event) => {
+    
+ //Comportement du bouton Generate
+ const handleGenerate = (event) => {
+    if (memeName == null) {
+        ShowAlert("you have to give a name to your meme");
+    } else {
         //Recupere le canvas où est visualisé le futur meme
         var canvas = document.getElementById("canvas-mm-preview");
         var url = canvas.toDataURL("image/png");
         let newFile;
         //On en fait un fichier
         canvas.toBlob((blob) => {
-            if (memeName == null) {
-                //si aucun nom n'a été donné, on en donne un par defaut
-                setMemeName("default");
-            }
             newFile = new File([blob], memeName + ".jpg", { type: "image/jpeg"})
             ShowMessage(newFile.name)
             //on envoie à la bdd le meme crée
-            invokePostForFile("addimage", newFile, null, "image added", "pb with image");
+            invokePostForFile("addimage", newFile, tag, true, "image added", "pb with image");
             //on nettoie les champs
             document.getElementById("idMemeName").value = '';
             document.getElementById("idTag").value = '';
@@ -213,11 +212,13 @@ function UploadPicture() {
         clearCanvas();
         CleanWorker();
         if (decision) {
-            invokePostForFile("addimage", file, tag, "image added", "pb with image");
+            invokePostForFile("addimage", file, tag, false, "image added", "pb with image");
             setDecision(false);
             setTag();
         }
     }
+    setDecision(false);
+} 
 
     return (
         <>

@@ -44,7 +44,7 @@ public class Facade {
 	@PersistenceContext
 	EntityManager em;
 	
-	private String pathToStore = "/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
+	private String pathToStore = "/home/ternardin/Documents/2A/ProjetWeb/memegeneratorreact/src/db";
 	private String pathToGetMeme = "../db/meme/";
 	private String pathToGetTemplate = "../db/template/";
 	
@@ -185,6 +185,12 @@ public class Facade {
     @Produces({ "application/json" })
 	public Collection<Picture> listMeme() {
 		System.out.println("Meme");
-		return em.createQuery("from Picture where isMeme = true", Picture.class).getResultList();
+        List<Picture> allPictures = em.createQuery("from Picture where isMeme = true", Picture.class).getResultList();
+        for (Picture p : allPictures) {
+            System.out.println("tag : " + p.getTags().toString());
+            p.setTags(null);
+            System.out.println(p.toString());
+        }
+        return allPictures;
 	}
 }

@@ -64,12 +64,12 @@ export function Mosaic() {
 
     if (init) {
       init = false;
-      invokeGet("listimage", "pb with listimage").then(data => setList(data));
+      invokeGet("listmeme", "pb with listmeme").then(data => setList(data));
     }
 
-    var memeList = list.map(function(l){
-      return <img src={require('../db/' + l.namePicture.toString())} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
-    })
+    /* var memeList = list.map(function(l){
+      return <img src={require('../db/memes/' + l.namePicture.toString())} id={l.namePicture} width="250"/>
+    }) */
 
 
     return (
@@ -82,7 +82,7 @@ export function Mosaic() {
           loader={<h4>Loading...</h4>}
         >
           <div>
-            {memeList}
+            {/* {memeList} */}
             {/* {list.map((i, index) => (<img src={require('../db/memes/meme1.jpg')} width="250"/>))} */}
             <h1>Coucou</h1>
           </div>
