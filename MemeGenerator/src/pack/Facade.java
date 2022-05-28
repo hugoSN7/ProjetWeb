@@ -25,10 +25,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/*import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartOutput;*/
+import org.jboss.resteasy.plugins.providers.multipart.MultipartOutput;
 
 
 /**@POST quand tu veux modifier un truc 
@@ -91,7 +91,7 @@ public class Facade {
 		}
 	}
 	
-	/*@POST
+	@POST
 	@Path("/addimage")
     @Consumes({ MediaType.MULTIPART_FORM_DATA})
 	public void addimage(MultipartFormDataInput input) {
@@ -124,5 +124,5 @@ public class Facade {
 		MultipartFormDataOutput output = new MultipartFormDataOutput();
 		output.addFormData("file", new File("/home/cedricazanove/git/ProjetWeb/MemeGenerator/dbImg/doigtLeve.png"), MediaType.APPLICATION_OCTET_STREAM_TYPE, "/home/cedricazanove/git/ProjetWeb/MemeGenerator/dbImg/doigtLeve.png");
 		return output;
-	}*/
+	}
 }
