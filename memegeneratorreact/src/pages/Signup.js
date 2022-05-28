@@ -35,7 +35,7 @@ export function Signup (){
      email : emails
     };
     invokePost("adduser", user, "ajout de l'user fait", "ajout du test echoué"); 
-    navigate("/login");
+    navigate("/compte");
   }
   return (
   <><h1>Sign Up</h1>

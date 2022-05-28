@@ -72,26 +72,27 @@ public class Facade {
 	}
 
 
-	@POST
+	@GET
 	@Path("/authentification")
 	@Produces({ "application/json" })
-	public String authentification(HashMap<String,String> user) {
+	public boolean authentification(@QueryParam("username")String username, @QueryParam("password")String password) {
 		System.out.println("authentification");
-		System.out.println(user.get("username"));
-		System.out.println(user.get("password"));
-		User u = em.find(User.class, user.get("username"));
+		System.out.println(username);
+		System.out.println(password);
+		User u = em.find(User.class, username);
 		System.out.println(u.getPassword());
 		
 		if (u == null) {
 			System.out.println("user non trouvé on va retourné false");
-			return "false car mauvais pseudo";
+			return false;
 		}
-		else if(user.get("password").equals(u.getPassword())) {
+		else if(password.equals(u.getPassword())) {
 			System.out.println("user trouvé on va retourné que l'authentification est bonne");
-			return "true";
+			
+			return true;
 		} else  {
 			System.out.println("user trouvé on va retourné que l'authentification est mauvaise");
-			return "false car mauvais password";
+			return false;
 		}
 	}
 	
