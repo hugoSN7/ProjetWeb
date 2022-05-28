@@ -65,26 +65,32 @@ async function invokeGetWithData(method, data, failureMsg) {
 //appel a la bdd et lister tous les templates
 function List() {
     const [list, setList] = useState([]);
+    const [list2, setList2] = useState([]);
+    const [mot, setMot] = useState();
     var canvas = document.getElementById("canvas-mm-preview");
     canvas.height = 0;
 
     if (init) {
         init = false;
-        invokeGet("listtemplate", "pb with listimage").then(data => setList(data));
+        invokeGetWithData("listtemplatewithtag", mot, "pb with listimage").then(data => setList(data));
     }
 
-    function askTemplateWithTag(mot) {
-        invokeGetWithData("listtemplatewithtag", mot.toLowerCase(), "error with template with tag");
+    var templateList;
+    if (list != null) {
+        templateList = list.map(function(l){
+            return <img src={require(`../db/template/${l.namePicture}`)} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
+        })
     }
 
-    var templateList = list.map(function(l){
-        return <img src={require(`../db/template/${l.namePicture}`)} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
-    })
+    function update(mot, bool) {
+        setMot(mot);
+        init = bool;
+    }
 
     return (
         <>
         <h1> List of Template </h1>
-        <input type="search" id="idSearchTag" placeholder="Use a tag for more precision" name="" onChange={(e) => askTemplateWithTag(e.target.value)}></input><br/><br/>
+        <input type="search" id="idSearchTag" placeholder="Use a tag for more precision" name="" onChange={(e) => update(e.target.value, true)}></input><br/><br/>
         {templateList}
         </>
     )

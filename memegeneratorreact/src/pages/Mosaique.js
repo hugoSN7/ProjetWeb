@@ -29,7 +29,7 @@ function ShowMessage(message) {
 }
 
 export function Mosaic() {
-  
+
     const [list, setList] = useState(Array.from({ length: 50 }));
 
     const [oldN, setOldN] = useState(0);
@@ -40,7 +40,7 @@ export function Mosaic() {
     //const [items, setItems] = useState(Array.from({ length: 20 }));
 
 
-    
+
 
 
 
@@ -55,7 +55,7 @@ export function Mosaic() {
             setList(
                 list.concat(Array.from({ length: 50 }))
               );
-              
+
             if (list.lenght >= 150) {
                 setHasMore(false)
             }
