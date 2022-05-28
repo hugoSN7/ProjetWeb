@@ -55,7 +55,7 @@ async function invokeGet(method, failureMsg) {
 //communiquer avec le serveur jboss avec de la data
 async function invokeGetWithData(method, data, failureMsg) {
     //const encodedValue = encodeURIComponent(data.toString());
-    //const res = await fetch(`/MemeGenerator/rest/${method}?tag=${encodedValue}`);
+    //const res = await fetch(`/MemeGenerator/rest/${method}?tag=${encodedValue}&?hashpwd=${}`);
     const res = await fetch("/MemeGenerator/rest/"+method+"?tag="+data);
     if (res.ok) return await res.json();
     ShowMessage(failureMsg);
@@ -268,15 +268,13 @@ function UploadPicture() {
         Give a name to your meme
         <br/>
         <input type="text" value={memeName} id="idMemeName" onChange={(e) => setMemeName(e.target.value)}/><br/>
-        {isYourTemplate &&
-            <>
-            Can we keep your template ?
-            <br/>
-            <input type="checkbox" id="decision" checked={decision} onChange={(e) => setDecision(e.target.value)}/>
-            <label for="decision">Yes</label><br/>
-            <br/>
-            </>
-        }
+        <>
+        Can we keep your template ?
+        <br/>
+        <input type="checkbox" id="decision" checked={decision} onChange={(e) => setDecision(e.target.value)}/>
+        <label for="decision">Yes</label><br/>
+        <br/>
+        </>
         Give it some tags
         <br/>
         <input type="text" id="idTag" value={tag} onChange={(e) => setTag(e.target.value)}/><br/><br/>
