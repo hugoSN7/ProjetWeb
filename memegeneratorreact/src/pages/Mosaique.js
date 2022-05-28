@@ -4,7 +4,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useState, useEffect } from "react";
 import UploadPicture from "./UploadPicture";
 
-var init=false;
+var init=true;
 
 async function invokePost(method, data, successMsg, failureMsg) {
     const requestOptions = {
@@ -15,6 +15,13 @@ async function invokePost(method, data, successMsg, failureMsg) {
     const res = await fetch("/MemeGenerator/rest/"+method,requestOptions);
     if (res.ok) ShowMessage(successMsg);
     else ShowMessage(failureMsg);
+}
+
+async function invokeGet(method, failureMsg) {
+  const res = await fetch("/MemeGenerator/rest/"+method);
+  if (res.ok) return await res.json();
+  ShowMessage(failureMsg);
+  return null;
 }
 
 function ShowMessage(message) {
@@ -55,7 +62,14 @@ export function Mosaic() {
               //setNewN(newN + 50);
           };
 
-          
+    if (init) {
+      init = false;
+      invokeGet("listimage", "pb with listimage").then(data => setList(data));
+    }
+
+    var memeList = list.map(function(l){
+      return <img src={require('../db/' + l.namePicture.toString())} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
+    })
 
 
     return (
@@ -68,7 +82,8 @@ export function Mosaic() {
           loader={<h4>Loading...</h4>}
         >
           <div>
-            {list.map((i, index) => (<img src={require('../db/memes/meme1.jpg')} width="250"/>))}
+            {memeList}
+            {/* {list.map((i, index) => (<img src={require('../db/memes/meme1.jpg')} width="250"/>))} */}
             <h1>Coucou</h1>
           </div>
         </InfiniteScroll>
