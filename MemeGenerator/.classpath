@@ -8,12 +8,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="db"/>
 	<classpathentry kind="src" path="dbImg"/>
-	<classpathentry kind="lib" path="/home/cedricazanove/git/ProjetWeb/JARFiles/hibernate-jpa-2.1-api-1.0.0.Final-redhat-1.jar"/>
-	<classpathentry kind="lib" path="/home/cedricazanove/git/ProjetWeb/JARFiles/jackson-annotations-2.5.4.redhat-1.jar"/>
-	<classpathentry kind="lib" path="/home/cedricazanove/git/ProjetWeb/JARFiles/jboss-ejb-api_3.2_spec-1.0.0.Final-redhat-1.jar"/>
-	<classpathentry kind="lib" path="/home/cedricazanove/git/ProjetWeb/JARFiles/jboss-jaxrs-api_2.0_spec-1.0.0.Final-redhat-1.jar"/>
-	<classpathentry kind="lib" path="/home/cedricazanove/git/ProjetWeb/JARFiles/jboss-servlet-api_3.1_spec-1.0.0.Final-redhat-1.jar"/>
-	<classpathentry kind="lib" path="/home/cedricazanove/nosave/EAP-7.0.0/modules/system/layers/base/org/jboss/resteasy/resteasy-multipart-provider/main/resteasy-multipart-provider-3.0.16.Final-redhat-1.jar"/>
-	<classpathentry kind="lib" path="/home/cedricazanove/Downloads/commons-io-2.11.0/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/hibernate-jpa-2.1-api-1.0.0.Final-redhat-1.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/jackson-annotations-2.5.4.redhat-1.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/jboss-ejb-api_3.2_spec-1.0.0.Final-redhat-1.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/jboss-jaxrs-api_2.0_spec-1.0.0.Final-redhat-1.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/jboss-servlet-api_3.1_spec-1.0.0.Final-redhat-1.jar"/>
+	<classpathentry kind="lib" path="/home/ternardin/Documents/2A/ProjetWeb/JARFiles/resteasy-multipart-provider-3.0.16.Final-redhat-1.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
