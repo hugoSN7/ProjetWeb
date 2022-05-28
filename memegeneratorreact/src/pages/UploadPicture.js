@@ -27,12 +27,13 @@ function ShowMessage(message) {
 }
 
 //communiquer avec le serveur jboss
-async function invokePostForFile(method, file, tag, successMsg, failureMsg) {
+async function invokePostForFile(method, file, tag, isMeme, successMsg, failureMsg) {
     const formData = new FormData();
 
     formData.append("name", file.name);
     formData.append("file", file);
     formData.append("tag", tag);
+    formData.append("isMeme", isMeme);
 
     const requestOptions = {
         method: "POST",
@@ -51,6 +52,16 @@ async function invokeGet(method, failureMsg) {
     return null;
 }
 
+//communiquer avec le serveur jboss avec de la data
+async function invokeGetWithData(method, data, failureMsg) {
+    //const encodedValue = encodeURIComponent(data.toString());
+    //const res = await fetch(`/MemeGenerator/rest/${method}?tag=${encodedValue}&?hashpwd=${}`);
+    const res = await fetch("/MemeGenerator/rest/"+method+"?tag="+data);
+    if (res.ok) return await res.json();
+    ShowMessage(failureMsg);
+    return null;
+}
+
 //appel a la bdd et lister tous les templates
 function List() {
     const [list, setList] = useState([]);
@@ -59,16 +70,21 @@ function List() {
 
     if (init) {
         init = false;
-        invokeGet("listimage", "pb with listimage").then(data => setList(data));
+        invokeGet("listtemplate", "pb with listimage").then(data => setList(data));
+    }
+
+    function askTemplateWithTag(mot) {
+        invokeGetWithData("listtemplatewithtag", mot.toLowerCase(), "error with template with tag");
     }
 
     var templateList = list.map(function(l){
-        return <img src={require('../db/' + l.namePicture.toString())} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
+        return <img src={require('../db/template/' + l.namePicture.toString())} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
     })
 
     return (
         <>
         <h1> List of Template </h1>
+        <input type="search" id="idSearchTag" placeholder="Use a tag for more precision" name="" onChange={(e) => askTemplateWithTag(e.target.value)}></input><br/><br/>
         {templateList}
         </>
     )
@@ -185,38 +201,39 @@ function UploadPicture() {
     //decision est un bool pour demander si l'on peut enregistrer ou noon le template qu'à upload le user
     const [memeName, setMemeName] = useState();
     const [decision, setDecision] = useState(false);
-    const [tag, setTag] = useState([]);
+    const [tag, setTag] = useState();
 
     //Comportement du bouton Generate
     const handleGenerate = (event) => {
-        //Recupere le canvas où est visualisé le futur meme
-        var canvas = document.getElementById("canvas-mm-preview");
-        var url = canvas.toDataURL("image/png");
-        let newFile;
-        //On en fait un fichier
-        canvas.toBlob((blob) => {
-            if (memeName == null) {
-                //si aucun nom n'a été donné, on en donne un par defaut
-                setMemeName("default");
+        if (memeName == null) {
+            ShowAlert("you have to give a name to your meme");
+        } else {
+            //Recupere le canvas où est visualisé le futur meme
+            var canvas = document.getElementById("canvas-mm-preview");
+            var url = canvas.toDataURL("image/png");
+            let newFile;
+            //On en fait un fichier
+            canvas.toBlob((blob) => {
+                newFile = new File([blob], memeName + ".jpg", { type: "image/jpeg"})
+                ShowMessage(newFile.name)
+                //on envoie à la bdd le meme crée
+                invokePostForFile("addimage", newFile, tag, true, "image added", "pb with image");
+                //on nettoie les champs
+                document.getElementById("idMemeName").value = '';
+                document.getElementById("idTag").value = '';
+                document.getElementById("idMemeContent").value = '';
+            }, 'image.jpeg');
+            //on nettoie les variables
+            setMemeName();
+            clearCanvas();
+            CleanWorker();
+            if (decision) {
+                invokePostForFile("addimage", file, tag, false, "image added", "pb with image");
+                setDecision(false);
+                setTag();
             }
-            newFile = new File([blob], memeName + ".jpg", { type: "image/jpeg"})
-            ShowMessage(newFile.name)
-            //on envoie à la bdd le meme crée
-            invokePostForFile("addimage", newFile, null, "image added", "pb with image");
-            //on nettoie les champs
-            document.getElementById("idMemeName").value = '';
-            document.getElementById("idTag").value = '';
-            document.getElementById("idMemeContent").value = '';
-        }, 'image.jpeg');
-        //on nettoie les variables
-        setMemeName();
-        clearCanvas();
-        CleanWorker();
-        if (decision) {
-            invokePostForFile("addimage", file, tag, "image added", "pb with image");
-            setDecision(false);
-            setTag();
         }
+        setDecision(false);
     }
 
     return (
@@ -251,23 +268,20 @@ function UploadPicture() {
         Give a name to your meme
         <br/>
         <input type="text" value={memeName} id="idMemeName" onChange={(e) => setMemeName(e.target.value)}/><br/>
-        {isYourTemplate &&
-            <>
-            Can we keep your template ?
-            <br/>
-            <input type="checkbox" id="decision" value={decision} checked={decision} onChange={(e) => setDecision(e.target.value)}/>
-            <label for="decision">Yes</label><br/>
-            Give it some tags
-            <br/>
-            <input type="text" id="idTag" value={tag} onChange={(e) => setTag(e.target.value)}/><br/>
-            <br/>
-            </>
-        }
+        <>
+        Can we keep your template ?
+        <br/>
+        <input type="checkbox" id="decision" checked={decision} onChange={(e) => setDecision(e.target.value)}/>
+        <label for="decision">Yes</label><br/>
+        <br/>
+        </>
+        Give it some tags
+        <br/>
+        <input type="text" id="idTag" value={tag} onChange={(e) => setTag(e.target.value)}/><br/><br/>
         <button class="button" onClick={handleGenerate}> Generate </button>
         </div>
 
         <div id="test">
-        <button onClick={() => test("Test")}> Test </button>
         <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>
         </div>
         </>
