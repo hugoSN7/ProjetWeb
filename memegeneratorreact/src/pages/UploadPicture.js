@@ -78,7 +78,7 @@ function List() {
     }
 
     var templateList = list.map(function(l){
-        return <img src={require('../db/template/' + l.namePicture.toString())} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
+        return <img src={require(`../db/template/${l.namePicture}`)} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
     })
 
     return (
