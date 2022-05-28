@@ -268,7 +268,7 @@ function UploadPicture() {
 
         <div id="test">
         <button onClick={() => test("Test")}> Test </button>
-        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>
+        <img id="staredad" src={require('../images/staredaddetoure.png')}/>
         </div>
         </>
     );
