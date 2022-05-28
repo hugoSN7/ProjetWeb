@@ -21,13 +21,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+/*import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartOutput;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartOutput;*/
 
 
 /**@POST quand tu veux modifier un truc 
@@ -66,30 +67,31 @@ public class Facade {
 	}
 
 
-	@POST
+	@GET
 	@Path("/authentification")
 	@Produces({ "application/json" })
-	public String authentification(HashMap<String,String> user) {
+	public boolean authentification(@QueryParam("username")String username, @QueryParam("password")String password) {
 		System.out.println("authentification");
-		System.out.println(user.get("username"));
-		System.out.println(user.get("password"));
-		User u = em.find(User.class, user.get("username"));
+		System.out.println(username);
+		System.out.println(password);
+		User u = em.find(User.class, username);
 		System.out.println(u.getPassword());
 		
 		if (u == null) {
 			System.out.println("user non trouvé on va retourné false");
-			return "false car mauvais pseudo";
+			return false;
 		}
-		else if(user.get("password").equals(u.getPassword())) {
+		else if(password.equals(u.getPassword())) {
 			System.out.println("user trouvé on va retourné que l'authentification est bonne");
-			return "true";
+			
+			return true;
 		} else  {
 			System.out.println("user trouvé on va retourné que l'authentification est mauvaise");
-			return "false car mauvais password";
+			return false;
 		}
 	}
 	
-	@POST
+	/*@POST
 	@Path("/addimage")
     @Consumes({ MediaType.MULTIPART_FORM_DATA})
 	public void addimage(MultipartFormDataInput input) {
@@ -122,5 +124,5 @@ public class Facade {
 		MultipartFormDataOutput output = new MultipartFormDataOutput();
 		output.addFormData("file", new File("/home/cedricazanove/git/ProjetWeb/MemeGenerator/dbImg/doigtLeve.png"), MediaType.APPLICATION_OCTET_STREAM_TYPE, "/home/cedricazanove/git/ProjetWeb/MemeGenerator/dbImg/doigtLeve.png");
 		return output;
-	}
+	}*/
 }
