@@ -2,6 +2,7 @@ package pack;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.awt.*;
@@ -15,12 +16,15 @@ import javax.imageio.ImageIO;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -40,6 +44,10 @@ public class Facade {
 	@PersistenceContext
 	EntityManager em;
 	
+	private String pathToStore = "/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
+	private String pathToGetMeme = "../db/meme/";
+	private String pathToGetTemplate = "../db/template/";
+	
 	@POST
 	@Path("/adduser")
     @Consumes({ "application/json" })
@@ -54,8 +62,6 @@ public class Facade {
 	public Collection<User> listUser() {
 		return em.createQuery("from User", User.class).getResultList();	
 	}
-	
-	
 	
 	@POST
 	@Path("/removeuser")
@@ -96,31 +102,89 @@ public class Facade {
 		try {
 			//Le nom du fichier est stocké dans la variable suivante
 			String fileName = input.getFormDataPart("name", String.class, null);
-			//On ccree un file pour recuperer le file envoyé
+			//On cree un file pour recuperer le file envoyé
 			File file = input.getFormDataPart("file", File.class, null);
+			//on regarde s'il s'agit d'un meme ou d'un template
+			Boolean isMeme = input.getFormDataPart("isMeme", Boolean.class, null);
+			//on recupere les tags s'il existe
+			String tagContent;
+			Tag tag = null;
+			try {
+				tagContent = input.getFormDataPart("tag", String.class, null);
+				tag = new Tag();
+				tag.setMot(tagContent.toLowerCase());
+				System.out.println("le tag enregistré est " + tag.getId());
+	            em.persist(tag);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//On enregistre par la suite le file dans un dossier
 			InputStream picture = new FileInputStream(file); 
             int size = picture.available();
             byte[] bucket = new byte[size];
             picture.read(bucket);
-            try (FileOutputStream outputStream = new FileOutputStream(new File("/home/cedricazanove/git/ProjetWeb/MemeGenerator/dbImg/" + fileName))) {
+            
+            try (FileOutputStream outputStream = new FileOutputStream(new File(pathToStore + (isMeme ? "/meme/": "/template/") + fileName))) {
                 outputStream.write(bucket);
                 outputStream.flush();
                 outputStream.close();
             }
-			System.out.println("Image ajouté");
+            //On cree l'objet et on l'enregistre ds la db
+            Picture pic = new Picture();
+            pic.setIsMeme(isMeme);
+            pic.setNamePicture(fileName);
+            if (isMeme) {
+                pic.setPath(pathToGetMeme + fileName);
+            } else {
+            	pic.setPath(pathToGetTemplate + fileName);
+            }
+            em.persist(pic);
+            if (isMeme) {
+                System.out.println("Meme ajouté");
+                System.out.println(pathToGetMeme + fileName);                
+            } else {
+            	System.out.println("Template ajouté");
+            	System.out.println(pathToGetTemplate + fileName);
+            }
+            
+            Picture p = em.find(Picture.class, fileName);
+            if (tag != null) {
+            	p.getTags().add(tag);
+            }
+            System.out.println("picture : " + p.toString());
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
 	
 	@GET
-	@Path("/listimage")
-    @Produces({ MediaType.MULTIPART_FORM_DATA })
-	public MultipartFormDataOutput listImage() {
-		//l'objet suivant permet d'envoyer des files au front
-		MultipartFormDataOutput output = new MultipartFormDataOutput();
-		output.addFormData("file", new File("/home/cedricazanove/git/ProjetWeb/MemeGenerator/dbImg/doigtLeve.png"), MediaType.APPLICATION_OCTET_STREAM_TYPE, "/home/cedricazanove/git/ProjetWeb/MemeGenerator/dbImg/doigtLeve.png");
-		return output;
+	@Path("/listtemplate")
+    @Produces({ "application/json" })
+	public Collection<Picture> listTemplate() {
+		System.out.println("Template");
+		List<Picture> allPictures = em.createQuery("from Picture where isMeme = false", Picture.class).getResultList();
+		for (Picture p : allPictures) {
+			System.out.println("tag : " + p.getTags().toString());
+			p.setTags(null);
+			System.out.println(p.toString());
+		}
+		return allPictures;
+	}
+	
+	@GET
+	@Path("/listtemplatewithtag")
+    @Produces({ "application/json" })
+	public Collection<Picture> listTemplateWithTag(@DefaultValue("*") @QueryParam("tag") String mot) {
+		System.out.println("Tag " + mot);
+		return null;
+	}
+	
+	@GET
+	@Path("/listmeme")
+    @Produces({ "application/json" })
+	public Collection<Picture> listMeme() {
+		System.out.println("Meme");
+		return em.createQuery("from Picture where isMeme = true", Picture.class).getResultList();
 	}
 }
