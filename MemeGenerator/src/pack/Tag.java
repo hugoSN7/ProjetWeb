@@ -3,7 +3,9 @@ package pack;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,12 +20,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Tag {
 	
 	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)  
-	int idTag;
 	private String mot;
 	
-	@ManyToMany(mappedBy = "tags")
-	private Collection<Picture> pictures = new ArrayList<Picture>();
+	@ManyToMany(mappedBy = "tags", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	private Collection<Picture> pictures;
 
 	public String getMot() {
 		return mot;
@@ -40,17 +40,14 @@ public class Tag {
 	public void setPictures(Collection<Picture> pictures) {
 		this.pictures = pictures;
 	}
-
-	public int getId() {
-		return idTag;
-	}
-
-	public void setId(int id) {
-		this.idTag = id;
-	}
 	
 	public String toString() {
 		String str = mot;
+		if (pictures != null) {
+			for (Picture p : pictures) {
+				str += "\n\t picture : " + p.toString() + "\n";
+			}
+		}
 		return str;
 	}
 	
