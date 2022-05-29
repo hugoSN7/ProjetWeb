@@ -18,13 +18,21 @@ import javax.persistence.OneToMany;
 public class Picture {
 	
 	@Id
+    @GeneratedValue(strategy=GenerationType.AUTO)  
+	private int idPicture;
+	
 	private String namePicture;
 	
 	private String path;
 	private Boolean isMeme;
 	
-	@ManyToMany
-	private Collection<Tag> tags = new ArrayList<Tag>();
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "Pictures_Tags",
+            joinColumns = {@JoinColumn(name = "idPicture")},
+            inverseJoinColumns = {@JoinColumn(name = "mot")}
+    )
+	private Collection<Tag> tags;
 		
 	public String getNamePicture() {
 		return namePicture;
@@ -50,10 +58,21 @@ public class Picture {
 	public void setIsMeme(Boolean isMeme) {
 		this.isMeme = isMeme;
 	}
+	public int getIdPicture() {
+		return idPicture;
+	}
+	public void setIdPicture(int idPicture) {
+		this.idPicture = idPicture;
+	}
 	public String toString() {
 		String str = namePicture;
 		str += "\n\t path : " + path;
 		str += "\n\t isMeme : " + isMeme;
+		if (tags != null) {
+			for (Tag t : tags) {
+				str += "\n\t tag : " + t.getMot();
+			}
+		}
 		return str;
 	}
 }

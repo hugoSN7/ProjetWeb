@@ -12,7 +12,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-
+import javax.management.Query;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -44,7 +44,7 @@ public class Facade {
 	@PersistenceContext
 	EntityManager em;
 	
-	private String pathToStore = "/home/ternardin/Documents/2A/ProjetWeb/memegeneratorreact/src/db/";
+	private String pathToStore = "/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
 	private String pathToGetMeme = "../db/meme/";
 	private String pathToGetTemplate = "../db/template/";
 	
@@ -72,27 +72,26 @@ public class Facade {
 	}
 
 
-	@GET
+	@POST
 	@Path("/authentification")
 	@Produces({ "application/json" })
-	public boolean authentification(@QueryParam("username")String username, @QueryParam("password")String password) {
+	public String authentification(HashMap<String,String> user) {
 		System.out.println("authentification");
-		System.out.println(username);
-		System.out.println(password);
-		User u = em.find(User.class, username);
+		System.out.println(user.get("username"));
+		System.out.println(user.get("password"));
+		User u = em.find(User.class, user.get("username"));
 		System.out.println(u.getPassword());
 		
 		if (u == null) {
 			System.out.println("user non trouvé on va retourné false");
-			return false;
+			return "false car mauvais pseudo";
 		}
-		else if(password.equals(u.getPassword())) {
+		else if(user.get("password").equals(u.getPassword())) {
 			System.out.println("user trouvé on va retourné que l'authentification est bonne");
-			
-			return true;
+			return "true";
 		} else  {
 			System.out.println("user trouvé on va retourné que l'authentification est mauvaise");
-			return false;
+			return "false car mauvais password";
 		}
 	}
 	
@@ -107,19 +106,6 @@ public class Facade {
 			File file = input.getFormDataPart("file", File.class, null);
 			//on regarde s'il s'agit d'un meme ou d'un template
 			Boolean isMeme = input.getFormDataPart("isMeme", Boolean.class, null);
-			//on recupere les tags s'il existe
-			String tagContent;
-			Tag tag = null;
-			try {
-				tagContent = input.getFormDataPart("tag", String.class, null);
-				tag = new Tag();
-				tag.setMot(tagContent.toLowerCase());
-				System.out.println("le tag enregistré est " + tag.getId());
-	            em.persist(tag);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			//On enregistre par la suite le file dans un dossier
 			InputStream picture = new FileInputStream(file); 
             int size = picture.available();
@@ -140,7 +126,6 @@ public class Facade {
             } else {
             	pic.setPath(pathToGetTemplate + fileName);
             }
-            em.persist(pic);
             if (isMeme) {
                 System.out.println("Meme ajouté");
                 System.out.println(pathToGetMeme + fileName);                
@@ -148,12 +133,36 @@ public class Facade {
             	System.out.println("Template ajouté");
             	System.out.println(pathToGetTemplate + fileName);
             }
-            
-            Picture p = em.find(Picture.class, fileName);
-            if (tag != null) {
-            	p.getTags().add(tag);
-            }
-            System.out.println("picture : " + p.toString());
+            //on recupere les tags s'il existe
+			String tagContent = input.getFormDataPart("tag", String.class, null);;
+			Tag tag = em.find(Tag.class, tagContent.toLowerCase());
+			if (tag == null) {
+				System.out.println("le tag " + tagContent + " n'existe pas");
+				tag = new Tag();
+				tag.setMot(tagContent.toLowerCase());
+			} else {
+				System.out.println("tag existant " + tag.toString());
+	        	Collection<Picture> allPicturesWithThisTag = tag.getPictures();
+	        	if (allPicturesWithThisTag == null) {
+	        		System.out.println("le tag existe mais n'a aucune picture");
+	        	}
+				System.out.println("le tag existe");
+			}
+			System.out.println("now le tag existe et tag : " + tag.toString());
+        	Collection<Picture> allPicturesWithThisTag = tag.getPictures();
+        	if (allPicturesWithThisTag == null) allPicturesWithThisTag = new ArrayList<Picture>();
+        	allPicturesWithThisTag.add(pic);
+        	tag.setPictures(allPicturesWithThisTag);
+        	
+        	Collection<Tag> allTagsOnThePicture = pic.getTags();
+        	if (allTagsOnThePicture == null) allTagsOnThePicture = new ArrayList<Tag>();
+        	allTagsOnThePicture.add(tag);
+        	pic.setTags(allTagsOnThePicture);
+        	
+			em.persist(tag);
+            em.persist(pic);
+        	System.out.println("tag : " + tag.toString()); 
+            System.out.println("pic : " + pic.toString());
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -164,13 +173,17 @@ public class Facade {
     @Produces({ "application/json" })
 	public Collection<Picture> listTemplate() {
 		System.out.println("Template");
-		List<Picture> allPictures = em.createQuery("from Picture where isMeme = false", Picture.class).getResultList();
-		for (Picture p : allPictures) {
-			System.out.println("tag : " + p.getTags().toString());
-			p.setTags(null);
+		Collection<Picture> allTemplates = em.createQuery("from Picture where isMeme = false", Picture.class).getResultList();
+		Collection<Picture> allTemplatesToSend = new ArrayList<Picture>();
+		for (Picture p : allTemplates) {
 			System.out.println(p.toString());
+			Picture pCopy = new Picture();
+			pCopy.setIsMeme(p.getIsMeme());
+			pCopy.setNamePicture(p.getNamePicture());
+			pCopy.setPath(p.getPath());
+			allTemplatesToSend.add(pCopy);
 		}
-		return allPictures;
+		return allTemplatesToSend;
 	}
 	
 	@GET
@@ -178,7 +191,25 @@ public class Facade {
     @Produces({ "application/json" })
 	public Collection<Picture> listTemplateWithTag(@DefaultValue("*") @QueryParam("tag") String mot) {
 		System.out.println("Tag " + mot);
-		return null;
+		Tag tag = em.find(Tag.class, mot.toLowerCase());
+		if (tag == null) {
+			System.out.println("le tag " + mot + " n'existe pas");
+			return listTemplate();
+		} else {
+			System.out.println("tag existant " + tag.toString());
+			Collection<Picture> allTemplates = em.createQuery("SELECT p FROM Picture p JOIN p.tags c WHERE c.mot = :word and p.isMeme = false").setParameter("word", mot).getResultList();
+			Collection<Picture> allTemplatesToSend = new ArrayList<Picture>();
+			for (Picture p : allTemplates) {
+				System.out.println("p : " + p.toString());
+				Picture pCopy = new Picture();
+				pCopy.setIsMeme(p.getIsMeme());
+				pCopy.setNamePicture(p.getNamePicture());
+				pCopy.setPath(p.getPath());
+				allTemplatesToSend.add(pCopy);
+				System.out.println("pCopy : " + pCopy.toString());
+			}
+			return allTemplatesToSend;
+		}
 	}
 	
 	@GET
@@ -186,6 +217,16 @@ public class Facade {
     @Produces({ "application/json" })
 	public Collection<Picture> listMeme() {
 		System.out.println("Meme");
-		return em.createQuery("from Picture where isMeme = true", Picture.class).getResultList();
+		Collection<Picture> allMemes = em.createQuery("from Picture where isMeme = true", Picture.class).getResultList();
+		Collection<Picture> allMemesToSend = new ArrayList<Picture>();
+		for (Picture p : allMemes) {
+			System.out.println(p.toString());
+			Picture pCopy = new Picture();
+			pCopy.setIsMeme(p.getIsMeme());
+			pCopy.setNamePicture(p.getNamePicture());
+			pCopy.setPath(p.getPath());
+			allMemesToSend.add(pCopy);
+		}
+		return allMemesToSend;
 	}
 }
