@@ -1,4 +1,10 @@
-.about {
+/* .about {
     text-shadow:#ff006e 2.5px 2.5px 0,#8338ec 5px 5px 0,#3a86ff 7.5px 7.5px 0,#333 10px 10px 10px;color:#ffcc00;
+} */
 
+#presentation {
+    position: absolute;
+    color: #e76f51;
+    top: 150px;left: 50px;
+    font-size: 20px;
 }

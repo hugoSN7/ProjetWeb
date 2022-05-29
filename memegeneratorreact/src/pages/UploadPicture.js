@@ -201,6 +201,7 @@ function UploadPicture() {
     //decision est un bool pour demander si l'on peut enregistrer ou noon le template qu'à upload le user
     const [memeName, setMemeName] = useState();
     const [decision, setDecision] = useState(false);
+
     const [tag, setTag] = useState();
 
     //Comportement du bouton Generate
@@ -271,7 +272,7 @@ function UploadPicture() {
         <>
         Can we keep your template ?
         <br/>
-        <input type="checkbox" id="decision" checked={decision} onChange={(e) => setDecision(e.target.value)}/>
+        <input type="checkbox" id="decision" checked={decision} onChange={(e) => decision ? setDecision(!(e.target.value)): setDecision(e.target.value)}/>
         <label for="decision">Yes</label><br/>
         <br/>
         </>
@@ -282,7 +283,7 @@ function UploadPicture() {
         </div>
 
         <div id="test">
-        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>
+        <img id="staredad" src={require('../images/staredaddetoure.png')} width="300"/>
         </div>
         </>
     );
