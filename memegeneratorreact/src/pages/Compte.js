@@ -20,6 +20,17 @@ function getToken(){
         return userToken;
     }
     };
+async function invokePost(method, data, successMsg, failureMsg) {
+    const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify(data)
+    };
+    const res = await fetch("/MemeGenerator/rest/"+method,requestOptions);
+    if (res.ok) ShowMessage(successMsg);
+    else ShowMessage(failureMsg);
+}
+      
 
 
 function Compte (){
@@ -27,11 +38,16 @@ function Compte (){
     let navigate = useNavigate();
     ShowMessage(token)
 
-    const disconnect = () =>{
-        //on m'affiche une error mais cela fonctionn quand meme
+    const delaccount = () =>{
+        invokePost("removeuser",token,"user supprimé", "pb avec la suppression")
         setToken("false");
         navigate("/home");
     }
+    //const disconnect = () =>{
+    //    //on m'affiche une error mais cela fonctionn quand meme
+    //    setToken("false");
+    //    navigate("/home");
+    //}
 
     if (getToken() == "false") {
         return <Login setToken={setToken} />
@@ -41,9 +57,11 @@ function Compte (){
         <h1>Bienvenue sur votre compte</h1>
         <Generate/>
         <button type="click" onClick={disconnect}> disconnect</button>
+        
     </div>
     );
     }
 
 }
 export default Compte;
+//<button type="click" onClick={delaccount}> delete my account</button>
