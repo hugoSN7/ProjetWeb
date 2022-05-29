@@ -38,16 +38,16 @@ function Compte (){
     let navigate = useNavigate();
     ShowMessage(token)
 
-    const delaccount = () =>{
-        invokePost("removeuser",token,"user supprimé", "pb avec la suppression")
-        setToken("false");
-        navigate("/home");
-    }
-    //const disconnect = () =>{
-    //    //on m'affiche une error mais cela fonctionn quand meme
+    //const delaccount = () =>{
+    //    invokePost("removeuser",token,"user supprimé", "pb avec la suppression")
     //    setToken("false");
     //    navigate("/home");
     //}
+    const disconnect = () =>{
+        //on m'affiche une error mais cela fonctionn quand meme
+        setToken("false");
+        navigate("/home");
+    }
 
     if (getToken() == "false") {
         return <Login setToken={setToken} />
