@@ -311,7 +311,8 @@ function UploadPicture() {
         <>
         Can we keep your template ?
         <br/>
-        <input type="checkbox" id="decision" checked={decision} onChange={(e) => decision ? setDecision(!(e.target.value)): setDecision(e.target.value)}/>
+        {/* <input type="checkbox" id="decision" checked={decision} onChange={(e) => decision ? setDecision(!(e.target.value)): setDecision(e.target.value)}/> */}
+        <input type="checkbox" id="decision" checked={decision} onChange={(e) => setDecision(e.target.value)}/>
         <label for="decision">Yes</label><br/>
         <br/>
         </>

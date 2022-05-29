@@ -43,8 +43,8 @@ public class Facade {
 
 	@PersistenceContext
 	EntityManager em;
-	
-	private String pathToStore = "/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
+	//"/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
+	private String pathToStore = "/home/greveill/Annee_2/Projet/ProjetWeb/memegeneratorreact/src/db/";
 	private String pathToGetMeme = "../db/meme/";
 	private String pathToGetTemplate = "../db/template/";
 	
