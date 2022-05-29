@@ -7,7 +7,6 @@ import Login from './Login';
 import Generate from './Generate';
 import useToken from './useToken';
 import { useNavigate } from 'react-router-dom';
-import Imageuser from './Imageuser';
 
 function ShowMessage(message) {
     alert(message);}
@@ -41,7 +40,6 @@ function Compte (){
     <div>
         <h1>Bienvenue sur votre compte</h1>
         <Generate/>
-        <Imageuser/>
         <button type="click" onClick={disconnect}> disconnect</button>
     </div>
     );
