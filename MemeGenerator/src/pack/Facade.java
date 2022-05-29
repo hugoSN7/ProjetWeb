@@ -44,7 +44,7 @@ public class Facade {
 	@PersistenceContext
 	EntityManager em;
 	
-	private String pathToStore = "/home/ternardin/Documents/2A/ProjetWeb/memegeneratorreact/src/db/";
+	private String pathToStore = "/home/greveill/Annee_2/Projet Web/ProjetWeb/memegeneratorreact/src/db";
 	private String pathToGetMeme = "../db/meme/";
 	private String pathToGetTemplate = "../db/template/";
 	
@@ -80,7 +80,7 @@ public class Facade {
 		System.out.println(username);
 		System.out.println(password);
 		User u = em.find(User.class, username);
-		System.out.println(u.getPassword());
+		System.out.println(u);
 		
 		if (u == null) {
 			System.out.println("user non trouvé on va retourné false");
@@ -188,4 +188,36 @@ public class Facade {
 		System.out.println("Meme");
 		return em.createQuery("from Picture where isMeme = true", Picture.class).getResultList();
 	}
+
+
+	@POST
+	@Path("/associate_meme_user")
+	@Consumes({ "application/json" })
+	public void associate_meme_user(HashMap<String,String> association) {
+		System.out.println("association du meme au user");
+		User u = em.find(User.class, association.get("token"));
+		System.out.println(u);
+		Picture meme = em.find(Picture.class, association.get("name"));
+		System.out.println(u);
+		System.out.println(meme);
+		if (u==null | meme==null ) {System.out.println("association impossible");}
+		else {
+			meme.setOwner(u);
+			System.out.println("association faite");
+		}
+	}
+	
+	@GET
+	@Path("/listuser_meme")
+    @Produces({ "application/json" })
+	public Collection<Picture> list_user_meme(@DefaultValue("*") @QueryParam("token")String username){
+		User u = em.find(User.class, username);
+		return u.getMemes();
+		
+	}
+	
+	
+
+
+
 }

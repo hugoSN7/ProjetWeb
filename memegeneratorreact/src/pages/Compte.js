@@ -7,18 +7,26 @@ import Login from './Login';
 import Generate from './Generate';
 import useToken from './useToken';
 import { useNavigate } from 'react-router-dom';
+import Imageuser from './Imageuser';
 
 function ShowMessage(message) {
     alert(message);}
+
+function getToken(){
+    const tokenString = localStorage.getItem('token');
+    const userToken = JSON.parse(tokenString);
+    if (userToken==null){
+        return "false";
+    }else{
+        return userToken;
+    }
+    };
 
 
 function Compte (){
     const {token, setToken } = useToken();
     let navigate = useNavigate();
-
-    if (token == "false") {
-        return <Login setToken={setToken} />
-    }
+    ShowMessage(token)
 
     const disconnect = () =>{
         //on m'affiche une error mais cela fonctionn quand meme
@@ -26,14 +34,18 @@ function Compte (){
         navigate("/home");
     }
 
+    if (getToken() == "false") {
+        return <Login setToken={setToken} />
+    }else{
     return (
     <div>
-        <h1>Compte on a réussi</h1>
+        <h1>Bienvenue sur votre compte</h1>
         <Generate/>
+        <Imageuser/>
         <button type="click" onClick={disconnect}> disconnect</button>
     </div>
-    
     );
+    }
 
 }
 export default Compte;

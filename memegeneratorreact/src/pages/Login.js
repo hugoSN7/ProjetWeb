@@ -45,7 +45,7 @@ export default function Login({setToken}){
     
     e.preventDefault();
     const re = await loginUser("authentification",username,password);
-    if (re == true){
+    if (re){
       setToken(username);
       navigate("/compte")
     

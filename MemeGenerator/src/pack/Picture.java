@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -25,6 +26,9 @@ public class Picture {
 	
 	@ManyToMany
 	private Collection<Tag> tags = new ArrayList<Tag>();
+	
+	@ManyToOne
+	private User Owner;
 		
 	public String getNamePicture() {
 		return namePicture;
@@ -56,4 +60,11 @@ public class Picture {
 		str += "\n\t isMeme : " + isMeme;
 		return str;
 	}
+	public User getOwner() {
+		return Owner;
+	}
+	public void setOwner(User owner) {
+		Owner = owner;
+	}
+	
 }

@@ -13,6 +13,10 @@ public class User {
 	private String pseudo;
     private String password;
     private String email;
+    
+    @OneToMany(mappedBy="Owner")
+    private Collection<Picture> Memes;
+    
 
     /**
     public User(String pseudo, String password, String email){
@@ -75,5 +79,15 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+	public Collection<Picture> getMemes() {
+		return Memes;
+	}
+
+	public void setMemes(Collection<Picture> memes) {
+		Memes = memes;
+	}
+    
+    
 
 }
