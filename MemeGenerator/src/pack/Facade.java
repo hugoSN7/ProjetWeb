@@ -48,6 +48,36 @@ public class Facade {
 	private String pathToGetMeme = "../db/meme/";
 	private String pathToGetTemplate = "../db/template/";
 	
+	//methode pour update ou ajouter un tag
+	public void updateTag(String mot, Picture picture) {
+		Tag tag = em.find(Tag.class, mot);
+		if (tag == null) {
+			System.out.println("le tag " + mot + " n'existe pas");
+			tag = new Tag();
+			tag.setMot(mot);
+		} else {
+			//sinon on ajoute l'image au tag deja existant
+			System.out.println("tag existant " + tag.toString());
+        	Collection<Picture> allPicturesWithThisTag = tag.getPictures();
+        	if (allPicturesWithThisTag == null) {
+        		System.out.println("le tag existe mais n'a aucune picture");
+        	}
+			System.out.println("le tag existe");
+		}
+		System.out.println("now le tag existe et tag : " + tag.toString());
+    	Collection<Picture> allPicturesWithThisTag = tag.getPictures();
+    	if (allPicturesWithThisTag == null) allPicturesWithThisTag = new ArrayList<Picture>();
+    	allPicturesWithThisTag.add(picture);
+    	tag.setPictures(allPicturesWithThisTag);
+    	em.persist(tag);	        	
+    	System.out.println("tag : " + tag.toString()); 
+    	
+    	Collection<Tag> allTagsOnThePicture = picture.getTags();
+    	if (allTagsOnThePicture == null) allTagsOnThePicture = new ArrayList<Tag>();
+    	allTagsOnThePicture.add(tag);
+    	picture.setTags(allTagsOnThePicture);
+	}
+	
 	@POST
 	@Path("/adduser")
     @Consumes({ "application/json" })
@@ -134,34 +164,29 @@ public class Facade {
             	System.out.println(pathToGetTemplate + fileName);
             }
             //on recupere les tags s'il existe
-			String tagContent = input.getFormDataPart("tag", String.class, null);;
-			Tag tag = em.find(Tag.class, tagContent.toLowerCase());
-			if (tag == null) {
-				System.out.println("le tag " + tagContent + " n'existe pas");
-				tag = new Tag();
-				tag.setMot(tagContent.toLowerCase());
+			String tagContent = input.getFormDataPart("tag", String.class, null);
+			if (tagContent.equals("undefined")) {
+				System.out.println("Aucun tag");
 			} else {
-				System.out.println("tag existant " + tag.toString());
-	        	Collection<Picture> allPicturesWithThisTag = tag.getPictures();
-	        	if (allPicturesWithThisTag == null) {
-	        		System.out.println("le tag existe mais n'a aucune picture");
-	        	}
-				System.out.println("le tag existe");
+				System.out.println("existence de tags");
+				tagContent = tagContent.toLowerCase();
+				//premiere tentative de recuperation de tag si des # ont ete utilisé
+				String[] lesTags = tagContent.split("#");
+				//si la taille fait 1 c'est qu'il n'y a pas de #, soit qu'on a utilisé des , soit qu'il y a depuis le debut qu'un seul mot
+				if (lesTags.length == 1) {
+					lesTags = lesTags[0].split(",");
+				}
+				//s'il y a tjr une taille c'est qu'il y avait qu'en fait un seul tag depuis le debut
+				if (lesTags.length == 1) {
+					updateTag(lesTags[0], pic);
+				} else {
+					for (int i = 0; i < lesTags.length; i++) {
+						System.out.println("le tag qu'on update est : " + lesTags[i]);
+						updateTag(lesTags[i], pic);
+					}
+				}
 			}
-			System.out.println("now le tag existe et tag : " + tag.toString());
-        	Collection<Picture> allPicturesWithThisTag = tag.getPictures();
-        	if (allPicturesWithThisTag == null) allPicturesWithThisTag = new ArrayList<Picture>();
-        	allPicturesWithThisTag.add(pic);
-        	tag.setPictures(allPicturesWithThisTag);
-        	
-        	Collection<Tag> allTagsOnThePicture = pic.getTags();
-        	if (allTagsOnThePicture == null) allTagsOnThePicture = new ArrayList<Tag>();
-        	allTagsOnThePicture.add(tag);
-        	pic.setTags(allTagsOnThePicture);
-        	
-			em.persist(tag);
             em.persist(pic);
-        	System.out.println("tag : " + tag.toString()); 
             System.out.println("pic : " + pic.toString());
 		} catch (Exception e) {
 			System.out.println(e);
@@ -190,8 +215,10 @@ public class Facade {
 	@Path("/listtemplatewithtag")
     @Produces({ "application/json" })
 	public Collection<Picture> listTemplateWithTag(@DefaultValue("*") @QueryParam("tag") String mot) {
+		mot = mot.toLowerCase();
+		if (mot.equals("")) mot = "*";
 		System.out.println("Tag " + mot);
-		Tag tag = em.find(Tag.class, mot.toLowerCase());
+		Tag tag = em.find(Tag.class, mot);
 		if (tag == null) {
 			System.out.println("le tag " + mot + " n'existe pas");
 			return listTemplate();
