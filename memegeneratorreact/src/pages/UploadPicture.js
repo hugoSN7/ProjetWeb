@@ -5,6 +5,7 @@ import Popup from '../component/Popup';
 import GenerateYourMeme from '../component/GenerateYourMeme';
 import '../WebContent/css/UploadPicture.css';
 import '../WebContent/css/General.css';
+import useToken from './useToken';
 
 
 //pour ne faire qu'une fois un GET request
@@ -24,6 +25,28 @@ function ShowAlert(message) {
 //afficher un msg
 function ShowMessage(message) {
     ReactDOM.render(<p>{message}</p>, document.getElementById("Message"));
+}
+
+//pour récupérer le token stocker afin de gérer l'user
+function getToken(){
+    const tokenString = localStorage.getItem('token');
+    const userToken = JSON.parse(tokenString);
+    if (userToken==null){
+        return "false";
+    }else{
+        return userToken;
+    }
+    };
+
+async function invokePost(method, data, successMsg, failureMsg) {
+    const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json; charset=utf-8" },
+            body: JSON.stringify(data)
+        };
+    const res = await fetch("/MemeGenerator/rest/"+method,requestOptions);
+    if (res.ok) ShowMessage(successMsg);
+    else ShowMessage(failureMsg);
 }
 
 //communiquer avec le serveur jboss
@@ -207,7 +230,9 @@ function UploadPicture() {
     //decision est un bool pour demander si l'on peut enregistrer ou noon le template qu'à upload le user
     const [memeName, setMemeName] = useState();
     const [decision, setDecision] = useState(false);
+
     const [tag, setTag] = useState();
+
 
     //Comportement du bouton Generate
     const handleGenerate = (event) => {
@@ -224,6 +249,13 @@ function UploadPicture() {
                 ShowMessage(newFile.name)
                 //on envoie à la bdd le meme crée
                 invokePostForFile("addimage", newFile, tag, true, "image added", "pb with image");
+                //association du meme au user s'il est connecté
+                var token = getToken();
+                var name = newFile.name;
+                if(token != "false"){
+                    invokePost("associate_meme_user", {token, name}, "association faite", "pb association non faite");
+                }
+
                 //on nettoie les champs
                 document.getElementById("idMemeName").value = '';
                 document.getElementById("idTag").value = '';
@@ -235,6 +267,8 @@ function UploadPicture() {
             CleanWorker();
             if (decision) {
                 invokePostForFile("addimage", file, tag, false, "image added", "pb with image");
+                
+
                 setDecision(false);
                 setTag();
             }
@@ -277,7 +311,7 @@ function UploadPicture() {
         <>
         Can we keep your template ?
         <br/>
-        <input type="checkbox" id="decision" checked={decision} onChange={(e) => setDecision(e.target.value)}/>
+        <input type="checkbox" id="decision" checked={decision} onChange={(e) => decision ? setDecision(!(e.target.value)): setDecision(e.target.value)}/>
         <label for="decision">Yes</label><br/>
         <br/>
         </>
@@ -288,7 +322,7 @@ function UploadPicture() {
         </div>
 
         <div id="test">
-        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>
+        <img id="staredad" src={require('../images/staredaddetoure.png')} width="300"/>
         </div>
         </>
     );
