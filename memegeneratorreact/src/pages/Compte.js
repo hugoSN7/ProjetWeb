@@ -38,11 +38,14 @@ function Compte (){
     let navigate = useNavigate();
     ShowMessage(token)
 
-    //const delaccount = () =>{
-    //    invokePost("removeuser",token,"user supprimé", "pb avec la suppression")
-    //    setToken("false");
-    //    navigate("/home");
-    //}
+    const delaccount = () =>{
+        let user = {
+            name : getToken()
+        };
+        invokePost("removeuser",user,"user supprimé", "pb avec la suppression")
+        setToken("false");
+        navigate("/home");
+    }
     const disconnect = () =>{
         //on m'affiche une error mais cela fonctionn quand meme
         setToken("false");
@@ -57,11 +60,10 @@ function Compte (){
         <h1>Bienvenue sur votre compte</h1>
         <Generate/>
         <button type="click" onClick={disconnect}> disconnect</button>
-        
+        <button type="click" onClick={delaccount}> delete my account</button>
     </div>
     );
     }
 
 }
 export default Compte;
-//<button type="click" onClick={delaccount}> delete my account</button>

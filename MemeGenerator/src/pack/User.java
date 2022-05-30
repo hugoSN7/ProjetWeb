@@ -87,7 +87,8 @@ public class User {
 	public void setMemes(Collection<Picture> memes) {
 		Memes = memes;
 	}
-    
+
+
     
 
 }

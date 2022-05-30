@@ -92,14 +92,6 @@ public class Facade {
 	public Collection<User> listUser() {
 		return em.createQuery("from User", User.class).getResultList();	
 	}
-	
-	@POST
-	@Path("/removeuser")
-    @Consumes({ "application/json" })
-	public void removeUser(User u) {
-		System.out.println("user supprimé");
-		em.remove(u);
-	}
 
 
 	@GET
@@ -279,10 +271,29 @@ public class Facade {
     @Produces({ "application/json" })
 	public Collection<Picture> list_user_meme(@DefaultValue("*") @QueryParam("token")String username){
 		User u = em.find(User.class, username);
-		return u.getMemes();
-		
+		if(u==null) {
+			System.out.println("user inexistant");
+			return null;
+		}else {
+			return u.getMemes();
+		}
 	}
 	
+	@POST
+	@Path("/removeuser")
+	@Consumes({"application/json"})
+	public void removeUser(HashMap<String,String> user) {
+		System.out.println(user.get("name"));
+		User u = em.find(User.class, user.get("name"));
+		System.out.println("suppression de user");
+		if (u==null) {
+			System.out.println("suppression impossible l'user n'existe pas");
+			}
+		else {
+			em.remove(u);
+			System.out.println("suppression faite");
+		}
+	}
 	
 
 
