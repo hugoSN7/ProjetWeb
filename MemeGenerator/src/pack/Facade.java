@@ -49,7 +49,7 @@ public class Facade {
 	private String pathToGetTemplate = "../db/template/";
 	
 	//methode pour update ou ajouter un tag
-	public void updateTag(String mot, Picture picture) {
+	public void updateTag(String mot, Template pic) {
 		Tag tag = em.find(Tag.class, mot);
 		if (tag == null) {
 			System.out.println("le tag " + mot + " n'existe pas");
@@ -58,25 +58,56 @@ public class Facade {
 		} else {
 			//sinon on ajoute l'image au tag deja existant
 			System.out.println("tag existant " + tag.toString());
-        	Collection<Picture> allPicturesWithThisTag = tag.getPictures();
+        	Collection<Template> allPicturesWithThisTag = tag.getTemplates();
         	if (allPicturesWithThisTag == null) {
         		System.out.println("le tag existe mais n'a aucune picture");
         	}
 			System.out.println("le tag existe");
 		}
 		System.out.println("now le tag existe et tag : " + tag.toString());
-    	Collection<Picture> allPicturesWithThisTag = tag.getPictures();
-    	if (allPicturesWithThisTag == null) allPicturesWithThisTag = new ArrayList<Picture>();
-    	allPicturesWithThisTag.add(picture);
-    	tag.setPictures(allPicturesWithThisTag);
+    	Collection<Template> allPicturesWithThisTag = tag.getTemplates();
+    	if (allPicturesWithThisTag == null) allPicturesWithThisTag = new ArrayList<Template>();
+    	allPicturesWithThisTag.add(pic);
+    	tag.setTemplates(allPicturesWithThisTag);
     	em.persist(tag);	        	
     	System.out.println("tag : " + tag.toString()); 
     	
-    	Collection<Tag> allTagsOnThePicture = picture.getTags();
+    	Collection<Tag> allTagsOnThePicture = pic.getTags();
     	if (allTagsOnThePicture == null) allTagsOnThePicture = new ArrayList<Tag>();
     	allTagsOnThePicture.add(tag);
+    	pic.setTags(allTagsOnThePicture);
+	}
+	
+	//methode pour update ou ajouter une category
+	public void updateCategory(String mot, Meme picture) {
+		Category category = em.find(Category.class, mot);
+		if (category == null) {
+			System.out.println("la category " + mot + " n'existe pas");
+			category = new Category();
+			category.setMot(mot);
+		} else {
+			//sinon on ajoute l'image au tag deja existant
+			System.out.println("category existant " + category.toString());
+        	Collection<Meme> allPicturesWithThisTag = category.getPictures();
+        	if (allPicturesWithThisTag == null) {
+        		System.out.println("la category existe mais n'a aucune picture");
+        	}
+			System.out.println("le category existe");
+		}
+		System.out.println("now la category existe et tag : " + category.toString());
+    	Collection<Meme> allPicturesWithThisTag = category.getPictures();
+    	if (allPicturesWithThisTag == null) allPicturesWithThisTag = new ArrayList<Meme>();
+    	allPicturesWithThisTag.add(picture);
+    	category.setPictures(allPicturesWithThisTag);
+    	em.persist(category);	        	
+    	System.out.println("category : " + category.toString()); 
+    	
+    	Collection<Category> allTagsOnThePicture = picture.getTags();
+    	if (allTagsOnThePicture == null) allTagsOnThePicture = new ArrayList<Category>();
+    	allTagsOnThePicture.add(category);
     	picture.setTags(allTagsOnThePicture);
 	}
+	
 	
 	@POST
 	@Path("/adduser")
@@ -195,6 +226,65 @@ public class Facade {
 		}
 	}
 	
+	@POST
+	@Path("/addtemplate")
+    @Consumes({ MediaType.MULTIPART_FORM_DATA})
+	public void addtemplate(MultipartFormDataInput input) {
+		try {
+			//Le nom du fichier est stocké dans la variable suivante
+			String fileName = input.getFormDataPart("name", String.class, null);
+			//On cree un file pour recuperer le file envoyé
+			File file = input.getFormDataPart("file", File.class, null);
+			//on regarde s'il s'agit d'un meme ou d'un template
+			Boolean isMeme = input.getFormDataPart("isMeme", Boolean.class, null);
+			//On enregistre par la suite le file dans un dossier
+			InputStream picture = new FileInputStream(file); 
+            int size = picture.available();
+            byte[] bucket = new byte[size];
+            picture.read(bucket);
+            
+            try (FileOutputStream outputStream = new FileOutputStream(new File(pathToStore + "/template/" + fileName))) {
+                outputStream.write(bucket);
+                outputStream.flush();
+                outputStream.close();
+            }
+            //On cree l'objet et on l'enregistre ds la db
+            Template pic = new Template();
+            pic.setIsMeme(isMeme);
+            pic.setNamePicture(fileName);
+            pic.setPath(pathToGetMeme + fileName);
+            System.out.println("Meme ajouté");
+            System.out.println(pathToGetMeme + fileName);
+            //on recupere les tags s'il existe
+			String tagContent = input.getFormDataPart("tag", String.class, null);
+			if (tagContent.equals("undefined")) {
+				System.out.println("Aucun tag");
+			} else {
+				System.out.println("existence de tags");
+				tagContent = tagContent.toLowerCase();
+				//premiere tentative de recuperation de tag si des # ont ete utilisé
+				String[] lesTags = tagContent.split("#");
+				//si la taille fait 1 c'est qu'il n'y a pas de #, soit qu'on a utilisé des , soit qu'il y a depuis le debut qu'un seul mot
+				if (lesTags.length == 1) {
+					lesTags = lesTags[0].split(", ");
+				}
+				//s'il y a tjr une taille c'est qu'il y avait qu'en fait un seul tag depuis le debut
+				if (lesTags.length == 1) {
+					updateTag(lesTags[0], pic);
+				} else {
+					for (int i = 0; i < lesTags.length; i++) {
+						System.out.println("le tag qu'on update est : " + lesTags[i]);
+						updateTag(lesTags[i], pic);
+					}
+				}
+			}
+            em.persist(pic);
+            System.out.println("pic : " + pic.toString());
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
 	@GET
 	@Path("/listuser_meme")
     @Produces({ "application/json" })
@@ -231,13 +321,13 @@ public class Facade {
 	@GET
 	@Path("/listtemplate")
     @Produces({ "application/json" })
-	public Collection<Picture> listTemplate() {
+	public Collection<Template> listTemplate() {
 		System.out.println("Template");
-		Collection<Picture> allTemplates = em.createQuery("from Picture where isMeme = false", Picture.class).getResultList();
-		Collection<Picture> allTemplatesToSend = new ArrayList<Picture>();
-		for (Picture p : allTemplates) {
-			System.out.println(p.toString());
-			Picture pCopy = new Picture();
+		Collection<Template> allTemplates = em.createQuery("from Template where isMeme = false", Template.class).getResultList();
+		Collection<Template> allTemplatesToSend = new ArrayList<Template>();
+		for (Template p : allTemplates) {
+			System.out.println("template : " + p.toString());
+			Template pCopy = new Template();
 			pCopy.setIsMeme(p.getIsMeme());
 			pCopy.setNamePicture(p.getNamePicture());
 			pCopy.setPath(p.getPath());
@@ -249,21 +339,21 @@ public class Facade {
 	@GET
 	@Path("/listtemplatewithtag")
     @Produces({ "application/json" })
-	public Collection<Picture> listTemplateWithTag(@DefaultValue("*") @QueryParam("tag") String mot) {
+	public Collection<Template> listTemplateWithTag(@DefaultValue("*") @QueryParam("tag") String mot) {
 		mot = mot.toLowerCase();
 		if (mot.equals("")) mot = "*";
-		System.out.println("Tag " + mot);
+		System.out.println("Tag souhaité " + mot);
 		Tag tag = em.find(Tag.class, mot);
 		if (tag == null) {
 			System.out.println("le tag " + mot + " n'existe pas");
 			return listTemplate();
 		} else {
 			System.out.println("tag existant " + tag.toString());
-			Collection<Picture> allTemplates = em.createQuery("SELECT p FROM Picture p JOIN p.tags c WHERE c.mot = :word and p.isMeme = false").setParameter("word", mot).getResultList();
-			Collection<Picture> allTemplatesToSend = new ArrayList<Picture>();
-			for (Picture p : allTemplates) {
-				System.out.println("p : " + p.toString());
-				Picture pCopy = new Picture();
+			Collection<Template> allTemplates = em.createQuery("SELECT p FROM Template p JOIN p.tags c WHERE c.mot = :word and p.isMeme = false").setParameter("word", mot).getResultList();
+			Collection<Template> allTemplatesToSend = new ArrayList<Template>();
+			for (Template p : allTemplates) {
+				System.out.println("template : " + p.toString());
+				Template pCopy = new Template();
 				pCopy.setIsMeme(p.getIsMeme());
 				pCopy.setNamePicture(p.getNamePicture());
 				pCopy.setPath(p.getPath());
@@ -279,13 +369,13 @@ public class Facade {
 	@GET
 	@Path("/listmeme")
     @Produces({ "application/json" })
-	public Collection<Picture> listMeme() {
+	public Collection<Meme> listMeme() {
 		System.out.println("Meme");
-		Collection<Picture> allMemes = em.createQuery("from Picture where isMeme = true", Picture.class).getResultList();
-		Collection<Picture> allMemesToSend = new ArrayList<Picture>();
-		for (Picture p : allMemes) {
-			System.out.println(p.toString());
-			Picture pCopy = new Picture();
+		Collection<Meme> allMemes = em.createQuery("from Meme where isMeme = true", Meme.class).getResultList();
+		Collection<Meme> allMemesToSend = new ArrayList<Meme>();
+		for (Meme p : allMemes) {
+			System.out.println("meme : " + p.toString());
+			Meme pCopy = new Meme();
 			pCopy.setIsMeme(p.getIsMeme());
 			pCopy.setNamePicture(p.getNamePicture());
 			pCopy.setPath(p.getPath());
