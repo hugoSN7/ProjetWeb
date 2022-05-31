@@ -336,6 +336,41 @@ public class Facade {
 		}
 	}
 	
+	//get comments picture
+	@GET
+	@Path("/listcomment_picture")
+    @Produces({ "application/json" })
+	public Collection<Comment> list_comment_picture(String namePicture){
+		System.out.println(namePicture);
+		int idp = Integer.parseInt(namePicture);
+		Picture meme = em.find(Picture.class, idp);
+		//if (meme.getComments().size() == 0) {
+
+		return meme.getComments();
+		
+	}
+	
+	//post comment picture user
+	@POST
+	@Path("/associate_comment")
+	@Consumes({ "application/json" })
+	public void associate_comment(HashMap<String,String> association) {
+		System.out.println("association du commentaire au user");
+		User writer = em.find(User.class, association.get("token"));
+
+		Picture meme = em.find(Picture.class, Integer.parseInt(association.get("idMeme")));
+
+		Comment c = new Comment(association.get("content"), writer, meme);
+		
+		//verif string !=null
+
+		if (writer==null | meme==null ) {System.out.println("association impossible");}
+		else {
+			em.persist(c);
+			System.out.println("association faite");
+		}
+	}
+	
 
 
 
