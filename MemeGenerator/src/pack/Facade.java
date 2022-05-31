@@ -127,6 +127,8 @@ public class Facade {
 			File file = input.getFormDataPart("file", File.class, null);
 			//on regarde s'il s'agit d'un meme ou d'un template
 			Boolean isMeme = input.getFormDataPart("isMeme", Boolean.class, null);
+			//on récupere le token pour l'association au user
+			String token = input.getFormDataPart("token", String.class, null);
 			//On enregistre par la suite le file dans un dossier
 			InputStream picture = new FileInputStream(file); 
             int size = picture.available();
@@ -179,10 +181,52 @@ public class Facade {
 			}
             em.persist(pic);
             System.out.println("pic : " + pic.toString());
+            if(token != "false") {
+            	System.out.println("association de l'image au user");
+        		User u = em.find(User.class, token);
+        		if (u==null) {System.out.println("association impossible");}
+        		else {
+        			pic.setOwner(u);
+        			System.out.println("association faite");
+        		}
+        	}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
+	
+	@GET
+	@Path("/listuser_meme")
+    @Produces({ "application/json" })
+	public Collection<Picture> list_user_meme(@DefaultValue("*") @QueryParam("token")String username){
+		User u = em.find(User.class, username);
+		if(u==null) {
+			System.out.println("user inexistant");
+			return null;
+		}else {
+			System.out.println("liste des pictures");
+			try {
+				Collection<Picture> allPicture = u.getMemes();
+				Collection<Picture> memeuser = new ArrayList<Picture>();
+				for (Picture p : allPicture) {
+					if (p.getIsMeme()) {
+						Picture pCopy = new Picture();
+						pCopy.setIsMeme(p.getIsMeme());
+						pCopy.setNamePicture(p.getNamePicture());
+						pCopy.setPath(p.getPath());
+						memeuser.add(pCopy);
+					}
+				
+				}
+				System.out.println("retour de la liste des memes");
+				return memeuser;
+			} catch (Exception e) {
+				System.out.println(e);
+				return null;
+			}
+		}
+	}
+	
 	
 	@GET
 	@Path("/listtemplate")
@@ -230,6 +274,8 @@ public class Facade {
 		}
 	}
 	
+	
+	
 	@GET
 	@Path("/listmeme")
     @Produces({ "application/json" })
@@ -248,36 +294,25 @@ public class Facade {
 		return allMemesToSend;
 	}
 
-
-	@POST
+	//en réalité la fonction associe user et template aussi
+	/*@POST
 	@Path("/associate_meme_user")
 	@Consumes({ "application/json" })
 	public void associate_meme_user(HashMap<String,String> association) {
 		System.out.println("association du meme au user");
+		System.out.println(association.get("token"));
 		User u = em.find(User.class, association.get("token"));
-		System.out.println(u);
+		
+		System.out.println(association.get("name"));
 		Picture meme = em.find(Picture.class, association.get("name"));
-		System.out.println(u);
-		System.out.println(meme);
+		
 		if (u==null | meme==null ) {System.out.println("association impossible");}
 		else {
 			meme.setOwner(u);
 			System.out.println("association faite");
 		}
-	}
+	}*/
 	
-	@GET
-	@Path("/listuser_meme")
-    @Produces({ "application/json" })
-	public Collection<Picture> list_user_meme(@DefaultValue("*") @QueryParam("token")String username){
-		User u = em.find(User.class, username);
-		if(u==null) {
-			System.out.println("user inexistant");
-			return null;
-		}else {
-			return u.getMemes();
-		}
-	}
 	
 	@POST
 	@Path("/removeuser")
@@ -285,12 +320,18 @@ public class Facade {
 	public void removeUser(HashMap<String,String> user) {
 		System.out.println(user.get("name"));
 		User u = em.find(User.class, user.get("name"));
-		System.out.println("suppression de user");
+		System.out.println("remove user");
 		if (u==null) {
 			System.out.println("suppression impossible l'user n'existe pas");
 			}
 		else {
-			em.remove(u);
+			Collection<Picture> allMemes = u.getMemes();
+			System.out.println("suppression des memes");
+			for (Picture p : allMemes) {
+				u.removeImage(p);
+			}
+			System.out.println("suppression du user");
+			//em.remove(u);
 			System.out.println("suppression faite");
 		}
 	}

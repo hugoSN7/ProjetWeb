@@ -50,13 +50,14 @@ async function invokePost(method, data, successMsg, failureMsg) {
 }
 
 //communiquer avec le serveur jboss
-async function invokePostForFile(method, file, tag, isMeme, successMsg, failureMsg) {
+async function invokePostForFile(method, file, tag, isMeme,token, successMsg, failureMsg) {
     const formData = new FormData();
 
     formData.append("name", file.name);
     formData.append("file", file);
     formData.append("tag", tag);
     formData.append("isMeme", isMeme);
+    formData.append("token", token);
 
     const requestOptions = {
         method: "POST",
@@ -248,13 +249,8 @@ function UploadPicture() {
                 newFile = new File([blob], memeName + ".jpg", { type: "image/jpeg"})
                 ShowMessage(newFile.name)
                 //on envoie à la bdd le meme crée
-                invokePostForFile("addimage", newFile, tag, true, "image added", "pb with image");
-                //association du meme au user s'il est connecté
-                var token = getToken();
-                var name = newFile.name;
-                if(token != "false"){
-                    invokePost("associate_meme_user", {token, name}, "association faite", "pb association non faite");
-                }
+                invokePostForFile("addimage", newFile, tag, true,getToken(), "image added", "pb with image");
+                
 
                 //on nettoie les champs
                 document.getElementById("idMemeName").value = '';
@@ -266,9 +262,7 @@ function UploadPicture() {
             clearCanvas();
             CleanWorker();
             if (decision) {
-                invokePostForFile("addimage", file, tag, false, "image added", "pb with image");
-                
-
+                invokePostForFile("addimage", file, tag, false,getToken(), "image added", "pb with image");
                 setDecision(false);
                 setTag();
             }
