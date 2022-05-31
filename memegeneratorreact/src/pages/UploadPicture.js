@@ -74,11 +74,11 @@ function List() {
     }
 
     function askTemplateWithTag(mot) {
-        invokeGetWithData("listtemplatewithtag", mot.toLowerCase(), "error with template with tag");
+        invokeGetWithData("listtemplatewithtag", mot.toLowerCase(), "error with template with tag").then(data => setList(data));
     }
 
     var templateList = list.map(function(l){
-        return <img src={require(`../db/template/${l.namePicture}`)} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
+        return <img src={require(`../db/template/${l.namePicture}`)} id={l.namePicture} height="150" onClick={() => YourTemplate(l.namePicture)}/>
     })
 
     return (
@@ -136,8 +136,121 @@ function updateMMPreview(url, text) {
 
     //Add text
     ctx.textBaseline = "bottom";
-    ctx.strokeText(text, width / 2, height - yOffset);
-    ctx.fillText(text, width / 2, height - yOffset);
+    //ctx.strokeText(text, width / 2, height - yOffset);
+    //ctx.fillText(text, width / 2, height - yOffset);
+
+    var texts = [];
+    texts.push({ text: text, x: width / 2, y: height - yOffset });
+    var StartX;
+    var StartY;
+    var offsetX = canvas.offsetLeft;
+    var offsetY = canvas.offsetTop;
+    var mouseX;
+    var mouseY;
+
+    //for (var i = 0; i < texts.length; i++) {
+    //    var text = texts[i];
+    //    ctx.position = 'absolute';
+    //    ctx.strokeText(text.text, text.x, text.y);
+    //    ctx.fillText(text.text, text.x, text.y);
+    //}
+    //canvas.addEventListener('mousedown', function(e) {
+    //    handleMouseDown(e);
+    //})
+    // calculate width of each text for hit-testing purposes
+    for (var i = 0; i < texts.length; i++) {
+        var text = texts[i];
+        text.width = ctx.measureText(text.text).width;
+        text.height = 20;
+    }
+
+    // this var will hold the index of the selected text
+    var selectedText = -1;
+
+    // START: draw all texts to the canvas
+    draw();
+
+    // clear the canvas draw all texts
+    function draw() {
+        ctx.drawImage(img, 0, 0, width, height);
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (var i = 0; i < texts.length; i++) {
+            var text = texts[i];
+            ctx.strokeText(text.text, text.x, text.y);
+            ctx.fillText(text.text, text.x, text.y);
+        }
+    }
+
+    // test if x,y is inside the bounding box of texts[textIndex]
+    function textHittest(x, y, textIndex) {
+        var text = texts[textIndex];
+        return (x >= text.x - text.width && x <= text.x + text.width && y >= text.y - text.height && y <= text.y + text.height);
+    }
+    // handle mousedown events
+    // iterate through texts[] and see if the user
+    // mousedown'ed on one of them
+    // If yes, set the selectedText to the index of that text
+    function handleMouseDown(e) {
+        e.preventDefault();
+        StartX = parseInt(e.clientX - offsetX);
+        StartY = parseInt(e.clientY - offsetY);
+
+        // Put your mousedown stuff here
+        for (var i = 0; i < texts.length; i++) {
+            if (textHittest(StartX, StartY, i)) {
+                selectedText = i;
+            }
+        }
+    }
+
+    // done dragging
+    function handleMouseUp(e) {
+        e.preventDefault();
+        selectedText = -1;
+    }
+
+    // also done dragging
+    function handleMouseOut(e) {
+        e.preventDefault();
+        selectedText = -1;
+    }
+
+    // handle mousemove events
+    // calc how far the mouse has been dragged since
+    // the last mousemove event and move the selected text
+    // by that distance
+    function handleMouseMove(e) {
+        if (selectedText < 0) {
+            return;
+        }
+        e.preventDefault();
+        mouseX = parseInt(e.clientX - offsetX);
+        mouseY = parseInt(e.clientY - offsetY);
+
+        // Put your mousemove stuff here
+        var dx = mouseX - StartX;
+        var dy = mouseY - StartY;
+        StartX = mouseX;
+        StartY = mouseY;
+
+        var text = texts[selectedText];
+        text.x += dx;
+        text.y += dy;
+        draw();
+    }
+
+    canvas.addEventListener('mousedown', function(e) {
+        handleMouseDown(e);
+    })
+    canvas.addEventListener('mousemove', function(e) {
+        handleMouseMove(e);
+    })
+    canvas.addEventListener('mouseup', function(e) {
+        handleMouseUp(e);
+    })
+    canvas.addEventListener('mouseout', function(e) {
+        handleMouseOut(e);
+    })
 }
 
 //effacer le canvas
@@ -228,7 +341,7 @@ function UploadPicture() {
             clearCanvas();
             CleanWorker();
             if (decision) {
-                invokePostForFile("addimage", file, tag, false, "image added", "pb with image");
+                invokePostForFile("addtemplate", file, tag, false, "image added", "pb with image");
                 setDecision(false);
                 setTag();
             }
@@ -247,6 +360,7 @@ function UploadPicture() {
 
         {/*Tout ce qui permet de visualiser le meme*/}
         <div id="mm-preview">
+        <br/>
         <canvas class="mm-canv" width="0" height="0" id="canvas-mm-preview"></canvas>
         <div class="drag-box-text" id="mm-text">
         </div>
@@ -282,7 +396,7 @@ function UploadPicture() {
         </div>
 
         <div id="test">
-        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>
+        {/*<img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>*/}
         </div>
         </>
     );
