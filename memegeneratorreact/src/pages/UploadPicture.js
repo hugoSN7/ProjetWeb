@@ -396,7 +396,7 @@ function UploadPicture() {
         </div>
 
         <div id="test">
-        {/*<img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>*/}
+        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>
         </div>
         </>
     );
