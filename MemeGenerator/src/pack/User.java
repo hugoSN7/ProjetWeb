@@ -91,7 +91,7 @@ public class User {
 
 	@OneToMany(mappedBy="writer")
     private Collection<Comment> comments;
-    
+    /*
  	public void removeComment(Meme meme){
         this.listMeme.remove(meme);
     }

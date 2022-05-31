@@ -4,7 +4,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useState, useEffect } from "react";
 import UploadPicture from "./UploadPicture";
 //import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
+//import 'reactjs-popup/dist/index.css';
 import Popup from '../component/Popup';
 import useToken from './useToken';
 
@@ -196,7 +196,7 @@ export function Mosaic() {
           setL(l1);
           setIdMeme(l2);
 
-          //invokeGetWithData("listcomment_picture",  idMeme, "pb with comm pice").then(data => setComments(data));
+          invokeGetWithData("listcomment_picture",  idMeme, "pb with comm pice").then(data => setComments(data));
 
           const tokenString = localStorage.getItem('token');
           const userToken = JSON.parse(tokenString);
@@ -205,7 +205,7 @@ export function Mosaic() {
             setToken("false");
             
           }else{
-            setIsLogged(false);
+            setIsLogged(true);
             setToken(userToken)
             
           }
@@ -223,13 +223,7 @@ export function Mosaic() {
           document.getElementById("content").value = '';
         }
 
-        const addComment = () => {
-          <button class="button" onClick={postComment}>Post comment</button>
-        };
-
-        const commentInput = () => {
-          <input type="text" value={content} id="content" onChange={(e) => setContent(e.target.value)}/>
-        }; //*/
+         //*/
 
 
 
@@ -268,8 +262,8 @@ export function Mosaic() {
                 <div align="center"> 
                   <img src={require(`../db/meme/${name}`)} id={name} width="250" />
                   <h4>{name}</h4>
-                  {/*comments.map( (l) => 
-                  (<h6>{l.pseudo} : {l.content}</h6>))*/}
+                  {comments.map( (l) => 
+                  (<h6>{l.pseudo} : {l.content}</h6>))}
                   {isLogged && 
                   <input type="text" value={content} id="content" onChange={(e) => setContent(e.target.value)}/>}
                   {isLogged && 
