@@ -87,4 +87,14 @@ public class Picture {
 		Owner = owner;
 	}
 	
+	@OneToMany(mappedBy="meme")
+    private Collection<Comment> comments;
+	
+	public Collection<Comment> getComments() {
+		return comments;
+	}
+	public void setComments(Collection<Comment> comments) {
+		this.comments = comments;
+	}
+	
 }
