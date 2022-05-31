@@ -89,6 +89,21 @@ public class User {
 		Memes = memes;
 	}
 
+	@OneToMany(mappedBy="writer")
+    private Collection<Comment> comments;
+    
+ 	public void removeComment(Meme meme){
+        this.listMeme.remove(meme);
+    }
+    */
+
+    public Collection<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Collection<Comment> comments) {
+		this.comments = comments;
+	}
 
     
 
