@@ -26,6 +26,9 @@ public class Meme {
 	private String path;
 	private Boolean isMeme;
 	
+	@ManyToOne
+	private User Owner;
+	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "Memes_Categories",
@@ -84,5 +87,22 @@ public class Meme {
 			}
 		}
 		return str;
+	}
+	
+	public User getOwner() {
+		return Owner;
+	}
+	public void setOwner(User owner) {
+		Owner = owner;
+	}
+	
+	@OneToMany(mappedBy="meme")
+    private Collection<Comment> comments;
+	
+	public Collection<Comment> getComments() {
+		return comments;
+	}
+	public void setComments(Collection<Comment> comments) {
+		this.comments = comments;
 	}
 }
