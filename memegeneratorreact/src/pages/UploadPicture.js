@@ -5,7 +5,6 @@ import Popup from '../component/Popup';
 import GenerateYourMeme from '../component/GenerateYourMeme';
 import '../WebContent/css/UploadPicture.css';
 import '../WebContent/css/General.css';
-import useToken from './useToken';
 
 
 //pour ne faire qu'une fois un GET request
@@ -27,37 +26,14 @@ function ShowMessage(message) {
     ReactDOM.render(<p>{message}</p>, document.getElementById("Message"));
 }
 
-//pour récupérer le token stocker afin de gérer l'user
-function getToken(){
-    const tokenString = localStorage.getItem('token');
-    const userToken = JSON.parse(tokenString);
-    if (userToken==null){
-        return "false";
-    }else{
-        return userToken;
-    }
-    };
-
-async function invokePost(method, data, successMsg, failureMsg) {
-    const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json; charset=utf-8" },
-            body: JSON.stringify(data)
-        };
-    const res = await fetch("/MemeGenerator/rest/"+method,requestOptions);
-    if (res.ok) ShowMessage(successMsg);
-    else ShowMessage(failureMsg);
-}
-
 //communiquer avec le serveur jboss
-async function invokePostForFile(method, file, tag, isMeme,token, successMsg, failureMsg) {
+async function invokePostForFile(method, file, tag, isMeme, successMsg, failureMsg) {
     const formData = new FormData();
 
     formData.append("name", file.name);
     formData.append("file", file);
     formData.append("tag", tag);
     formData.append("isMeme", isMeme);
-    formData.append("token", token);
 
     const requestOptions = {
         method: "POST",
@@ -89,32 +65,26 @@ async function invokeGetWithData(method, data, failureMsg) {
 //appel a la bdd et lister tous les templates
 function List() {
     const [list, setList] = useState([]);
-    const [list2, setList2] = useState([]);
-    const [mot, setMot] = useState();
     var canvas = document.getElementById("canvas-mm-preview");
     canvas.height = 0;
 
     if (init) {
         init = false;
-        invokeGetWithData("listtemplatewithtag", mot, "pb with listimage").then(data => setList(data));
+        invokeGet("listtemplate", "pb with listimage").then(data => setList(data));
     }
 
-    var templateList;
-    if (list != null) {
-        templateList = list.map(function(l){
-            return <img src={require(`../db/template/${l.namePicture}`)} id={l.namePicture} width="250" onClick={() => YourTemplate(l.namePicture)}/>
-        })
+    function askTemplateWithTag(mot) {
+        invokeGetWithData("listtemplatewithtag", mot.toLowerCase(), "error with template with tag").then(data => setList(data));
     }
 
-    function update(mot, bool) {
-        setMot(mot);
-        init = bool;
-    }
+    var templateList = list.map(function(l){
+        return <img src={require(`../db/template/${l.namePicture}`)} id={l.namePicture} height="150" onClick={() => YourTemplate(l.namePicture)}/>
+    })
 
     return (
         <>
         <h1> List of Template </h1>
-        <input type="search" id="idSearchTag" placeholder="Use a tag for more precision" name="" onChange={(e) => update(e.target.value, true)}></input><br/><br/>
+        <input type="search" id="idSearchTag" placeholder="Use a tag for more precision" name="" onChange={(e) => askTemplateWithTag(e.target.value)}></input><br/><br/>
         {templateList}
         </>
     )
@@ -166,8 +136,121 @@ function updateMMPreview(url, text) {
 
     //Add text
     ctx.textBaseline = "bottom";
-    ctx.strokeText(text, width / 2, height - yOffset);
-    ctx.fillText(text, width / 2, height - yOffset);
+    //ctx.strokeText(text, width / 2, height - yOffset);
+    //ctx.fillText(text, width / 2, height - yOffset);
+
+    var texts = [];
+    texts.push({ text: text, x: width / 2, y: height - yOffset });
+    var StartX;
+    var StartY;
+    var offsetX = canvas.offsetLeft;
+    var offsetY = canvas.offsetTop;
+    var mouseX;
+    var mouseY;
+
+    //for (var i = 0; i < texts.length; i++) {
+    //    var text = texts[i];
+    //    ctx.position = 'absolute';
+    //    ctx.strokeText(text.text, text.x, text.y);
+    //    ctx.fillText(text.text, text.x, text.y);
+    //}
+    //canvas.addEventListener('mousedown', function(e) {
+    //    handleMouseDown(e);
+    //})
+    // calculate width of each text for hit-testing purposes
+    for (var i = 0; i < texts.length; i++) {
+        var text = texts[i];
+        text.width = ctx.measureText(text.text).width;
+        text.height = 20;
+    }
+
+    // this var will hold the index of the selected text
+    var selectedText = -1;
+
+    // START: draw all texts to the canvas
+    draw();
+
+    // clear the canvas draw all texts
+    function draw() {
+        ctx.drawImage(img, 0, 0, width, height);
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (var i = 0; i < texts.length; i++) {
+            var text = texts[i];
+            ctx.strokeText(text.text, text.x, text.y);
+            ctx.fillText(text.text, text.x, text.y);
+        }
+    }
+
+    // test if x,y is inside the bounding box of texts[textIndex]
+    function textHittest(x, y, textIndex) {
+        var text = texts[textIndex];
+        return (x >= text.x - text.width && x <= text.x + text.width && y >= text.y - text.height && y <= text.y + text.height);
+    }
+    // handle mousedown events
+    // iterate through texts[] and see if the user
+    // mousedown'ed on one of them
+    // If yes, set the selectedText to the index of that text
+    function handleMouseDown(e) {
+        e.preventDefault();
+        StartX = parseInt(e.clientX - offsetX);
+        StartY = parseInt(e.clientY - offsetY);
+
+        // Put your mousedown stuff here
+        for (var i = 0; i < texts.length; i++) {
+            if (textHittest(StartX, StartY, i)) {
+                selectedText = i;
+            }
+        }
+    }
+
+    // done dragging
+    function handleMouseUp(e) {
+        e.preventDefault();
+        selectedText = -1;
+    }
+
+    // also done dragging
+    function handleMouseOut(e) {
+        e.preventDefault();
+        selectedText = -1;
+    }
+
+    // handle mousemove events
+    // calc how far the mouse has been dragged since
+    // the last mousemove event and move the selected text
+    // by that distance
+    function handleMouseMove(e) {
+        if (selectedText < 0) {
+            return;
+        }
+        e.preventDefault();
+        mouseX = parseInt(e.clientX - offsetX);
+        mouseY = parseInt(e.clientY - offsetY);
+
+        // Put your mousemove stuff here
+        var dx = mouseX - StartX;
+        var dy = mouseY - StartY;
+        StartX = mouseX;
+        StartY = mouseY;
+
+        var text = texts[selectedText];
+        text.x += dx;
+        text.y += dy;
+        draw();
+    }
+
+    canvas.addEventListener('mousedown', function(e) {
+        handleMouseDown(e);
+    })
+    canvas.addEventListener('mousemove', function(e) {
+        handleMouseMove(e);
+    })
+    canvas.addEventListener('mouseup', function(e) {
+        handleMouseUp(e);
+    })
+    canvas.addEventListener('mouseout', function(e) {
+        handleMouseOut(e);
+    })
 }
 
 //effacer le canvas
@@ -231,9 +314,7 @@ function UploadPicture() {
     //decision est un bool pour demander si l'on peut enregistrer ou noon le template qu'à upload le user
     const [memeName, setMemeName] = useState();
     const [decision, setDecision] = useState(false);
-
     const [tag, setTag] = useState();
-
 
     //Comportement du bouton Generate
     const handleGenerate = (event) => {
@@ -249,9 +330,7 @@ function UploadPicture() {
                 newFile = new File([blob], memeName + ".jpg", { type: "image/jpeg"})
                 ShowMessage(newFile.name)
                 //on envoie à la bdd le meme crée
-                invokePostForFile("addimage", newFile, tag, true,getToken(), "image added", "pb with image");
-                
-
+                invokePostForFile("addimage", newFile, tag, true, "image added", "pb with image");
                 //on nettoie les champs
                 document.getElementById("idMemeName").value = '';
                 document.getElementById("idTag").value = '';
@@ -262,7 +341,7 @@ function UploadPicture() {
             clearCanvas();
             CleanWorker();
             if (decision) {
-                invokePostForFile("addimage", file, tag, false,getToken(), "image added", "pb with image");
+                invokePostForFile("addtemplate", file, tag, false, "image added", "pb with image");
                 setDecision(false);
                 setTag();
             }
@@ -281,6 +360,7 @@ function UploadPicture() {
 
         {/*Tout ce qui permet de visualiser le meme*/}
         <div id="mm-preview">
+        <br/>
         <canvas class="mm-canv" width="0" height="0" id="canvas-mm-preview"></canvas>
         <div class="drag-box-text" id="mm-text">
         </div>
@@ -305,7 +385,6 @@ function UploadPicture() {
         <>
         Can we keep your template ?
         <br/>
-        {/* <input type="checkbox" id="decision" checked={decision} onChange={(e) => decision ? setDecision(!(e.target.value)): setDecision(e.target.value)}/> */}
         <input type="checkbox" id="decision" checked={decision} onChange={(e) => setDecision(e.target.value)}/>
         <label for="decision">Yes</label><br/>
         <br/>
@@ -317,7 +396,7 @@ function UploadPicture() {
         </div>
 
         <div id="test">
-        <img id="staredad" src={require('../images/staredaddetoure.png')} width="300"/>
+        {/*<img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>*/}
         </div>
         </>
     );
