@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class User {
@@ -16,6 +17,9 @@ public class User {
     
     @OneToMany(mappedBy="Owner")
     private Collection<Picture> Memes;
+    
+    @OneToOne(mappedBy="Owner")
+    private Achivement myachivement;
     
 
     /**
@@ -46,7 +50,17 @@ public class User {
     }
     */
 
-    /**
+    public Achivement getMyachivement() {
+		return myachivement;
+	}
+
+
+	public void setMyachivement(Achivement myachivement) {
+		this.myachivement = myachivement;
+	}
+
+
+	/**
     public void addImage(Image image){
         this.listImage.add(image);
     }

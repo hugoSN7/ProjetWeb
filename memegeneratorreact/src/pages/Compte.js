@@ -31,13 +31,24 @@ async function invokePost(method, data, successMsg, failureMsg) {
     if (res.ok) ShowMessage(successMsg);
     else ShowMessage(failureMsg);
 }
+
+async function invokeGetWithData(method, data, failureMsg) {
+    const res = await fetch("/MemeGenerator/rest/"+method+"?token="+data);
+    if (res.ok) return await res.json();
+    ShowMessage(failureMsg);
+    return null;
+}
+
+function Achivement (){
+    const ach = invokeGetWithData("user_ach", getToken, "echec de la reception le achivement")
+    return ach
+}
       
 
 
 function Compte (){
     const {token, setToken } = useToken();
     let navigate = useNavigate();
-    ShowMessage(token)
 
     const delaccount = () =>{
         let user = {
@@ -58,7 +69,8 @@ function Compte (){
     }else{
     return (
     <div>
-        <h1>Bienvenue sur votre compte</h1>
+        <h1>Bienvenue sur votre compte <getToken/> </h1>
+        <Achivement/>
         <Generate/>
         <Pictureuser/>
         <button type="click" onClick={disconnect}> disconnect</button>

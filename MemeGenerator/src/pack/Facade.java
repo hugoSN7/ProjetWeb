@@ -84,6 +84,8 @@ public class Facade {
 	public void addUser(User u) {
 		System.out.println("Utilisateur ajouté");
 		em.persist(u);
+		Achivement myach = new Achivement();
+		myach.setOwner(u);
 	}
 	
 	@GET
@@ -181,18 +183,39 @@ public class Facade {
 			}
             em.persist(pic);
             System.out.println("pic : " + pic.toString());
-            if(token != "false") {
+            if(token != "false" && isMeme == true) {
             	System.out.println("association de l'image au user");
         		User u = em.find(User.class, token);
         		if (u==null) {System.out.println("association impossible");}
         		else {
         			pic.setOwner(u);
         			System.out.println("association faite");
+        			Update_ach(u);
         		}
         	}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+	}
+	
+	public void Update_ach(User user) {
+		Collection<Picture> allMeme = user.getMemes();
+		int nb_meme = allMeme.size();
+		Achivement ach = user.getMyachivement();
+		if (nb_meme == 1) {
+			ach.setCreate_user(false);
+			ach.setCreate_1meme(true);
+		} else if (nb_meme == 10) {
+			ach.setCreate_1meme(false);
+			ach.setCreate_10meme(true);
+		}else if (nb_meme == 100) {
+			ach.setCreate_10meme(false);
+			ach.setCreate_100meme(true);
+		}else if (nb_meme == 1000) {
+			ach.setCreate_100meme(false);
+			ach.setCreate_1000meme(true);
+		}
+		
 	}
 	
 	@GET
@@ -334,6 +357,33 @@ public class Facade {
 			//em.remove(u);
 			System.out.println("suppression faite");
 		}
+	}
+	
+	@GET
+	@Path("/user_ach")
+    @Produces({ "application/json" })
+	public String user_ach(@DefaultValue("*") @QueryParam("token")String username){
+		User u = em.find(User.class, username);
+		if (u == null) {
+			System.out.println("l'user n'existe pas");
+			return null;
+		}else {
+			Achivement ach = u.getMyachivement();
+			if(ach.getCreate_user()) {
+				return ach.getUser();
+			}else if(ach.getCreate_1meme()) {
+				return ach.getUnMeme();
+			}else if(ach.getCreate_10meme()) {
+				return ach.getDixMeme();
+			}else if(ach.getCreate_100meme()) {
+				return ach.getCentMeme();
+			}else if(ach.getCreate_100meme()) {
+				return ach.getCentMeme();
+			}else {
+				return null;
+			}
+		}
+		
 	}
 	
 
