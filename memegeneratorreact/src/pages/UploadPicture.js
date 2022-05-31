@@ -21,19 +21,31 @@ function ShowAlert(message) {
     alert(message);
 }
 
+//get the token of the current user
+function getToken(){
+    const tokenString = localStorage.getItem('token');
+    const userToken = JSON.parse(tokenString);
+    if (userToken==null){
+        return "false";
+    }else{
+        return userToken;
+    }
+    };
+
 //afficher un msg
 function ShowMessage(message) {
     ReactDOM.render(<p>{message}</p>, document.getElementById("Message"));
 }
 
 //communiquer avec le serveur jboss
-async function invokePostForFile(method, file, tag, isMeme, successMsg, failureMsg) {
+async function invokePostForFile(method, file, tag, isMeme, token, successMsg, failureMsg) {
     const formData = new FormData();
 
     formData.append("name", file.name);
     formData.append("file", file);
     formData.append("tag", tag);
     formData.append("isMeme", isMeme);
+    formData.append("token", token);
 
     const requestOptions = {
         method: "POST",
@@ -330,7 +342,7 @@ function UploadPicture() {
                 newFile = new File([blob], memeName + ".jpg", { type: "image/jpeg"})
                 ShowMessage(newFile.name)
                 //on envoie à la bdd le meme crée
-                invokePostForFile("addimage", newFile, tag, true, "image added", "pb with image");
+                invokePostForFile("addimage", newFile, tag, true, getToken(), "image added", "pb with image");
                 //on nettoie les champs
                 document.getElementById("idMemeName").value = '';
                 document.getElementById("idTag").value = '';
@@ -341,7 +353,7 @@ function UploadPicture() {
             clearCanvas();
             CleanWorker();
             if (decision) {
-                invokePostForFile("addtemplate", file, tag, false, "image added", "pb with image");
+                invokePostForFile("addtemplate", file, tag, false, getToken(), "image added", "pb with image");
                 setDecision(false);
                 setTag();
             }
@@ -396,7 +408,7 @@ function UploadPicture() {
         </div>
 
         <div id="test">
-        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png"/>
+        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png" height="100"/>
         </div>
         </>
     );
