@@ -7,6 +7,7 @@ import Login from './Login';
 import Generate from './Generate';
 import useToken from './useToken';
 import { useNavigate } from 'react-router-dom';
+import Pictureuser from './Pictureuser';
 
 function ShowMessage(message) {
     alert(message);}
@@ -59,6 +60,7 @@ function Compte (){
     <div>
         <h1>Bienvenue sur votre compte</h1>
         <Generate/>
+        <Pictureuser/>
         <button type="click" onClick={disconnect}> disconnect</button>
         <button type="click" onClick={delaccount}> delete my account</button>
     </div>

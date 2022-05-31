@@ -50,11 +50,12 @@ public class User {
     public void addImage(Image image){
         this.listImage.add(image);
     }
-
-    public void removeImage(Image image){
-        this.listImage.remove(image);
-    }
     */
+
+    public void removeImage(Picture image){
+        this.Memes.remove(image);
+    }
+    
 
     public String getPseudo() {
         return pseudo;
