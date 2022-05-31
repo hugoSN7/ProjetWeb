@@ -44,7 +44,7 @@ public class Facade {
 	@PersistenceContext
 	EntityManager em;
 	//"/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
-	private String pathToStore = "/home/greveill/Annee_2/Projet/ProjetWeb/memegeneratorreact/src/db/";
+	private String pathToStore = "/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
 	private String pathToGetMeme = "../db/meme/";
 	private String pathToGetTemplate = "../db/template/";
 	
@@ -172,7 +172,7 @@ public class Facade {
                 outputStream.close();
             }
             //On cree l'objet et on l'enregistre ds la db
-            Picture pic = new Picture();
+            Meme pic = new Meme();
             pic.setIsMeme(isMeme);
             pic.setNamePicture(fileName);
             if (isMeme) {
@@ -188,25 +188,25 @@ public class Facade {
             	System.out.println(pathToGetTemplate + fileName);
             }
             //on recupere les tags s'il existe
-			String tagContent = input.getFormDataPart("tag", String.class, null);
-			if (tagContent.equals("undefined")) {
+			String categoryContent = input.getFormDataPart("tag", String.class, null);
+			if (categoryContent.equals("undefined")) {
 				System.out.println("Aucun tag");
 			} else {
 				System.out.println("existence de tags");
-				tagContent = tagContent.toLowerCase();
+				categoryContent = categoryContent.toLowerCase();
 				//premiere tentative de recuperation de tag si des # ont ete utilisé
-				String[] lesTags = tagContent.split("#");
+				String[] lesCategories = categoryContent.split("#");
 				//si la taille fait 1 c'est qu'il n'y a pas de #, soit qu'on a utilisé des , soit qu'il y a depuis le debut qu'un seul mot
-				if (lesTags.length == 1) {
-					lesTags = lesTags[0].split(",");
+				if (lesCategories.length == 1) {
+					lesCategories = lesCategories[0].split(",");
 				}
 				//s'il y a tjr une taille c'est qu'il y avait qu'en fait un seul tag depuis le debut
-				if (lesTags.length == 1) {
-					updateTag(lesTags[0], pic);
+				if (lesCategories.length == 1) {
+					updateCategory(lesCategories[0], pic);
 				} else {
-					for (int i = 0; i < lesTags.length; i++) {
-						System.out.println("le tag qu'on update est : " + lesTags[i]);
-						updateTag(lesTags[i], pic);
+					for (int i = 0; i < lesCategories.length; i++) {
+						System.out.println("le tag qu'on update est : " + lesCategories[i]);
+						updateCategory(lesCategories[i], pic);
 					}
 				}
 			}
@@ -288,7 +288,7 @@ public class Facade {
 	@GET
 	@Path("/listuser_meme")
     @Produces({ "application/json" })
-	public Collection<Picture> list_user_meme(@DefaultValue("*") @QueryParam("token")String username){
+	public Collection<Meme> list_user_meme(@DefaultValue("*") @QueryParam("token")String username){
 		User u = em.find(User.class, username);
 		if(u==null) {
 			System.out.println("user inexistant");
@@ -296,11 +296,11 @@ public class Facade {
 		}else {
 			System.out.println("liste des pictures");
 			try {
-				Collection<Picture> allPicture = u.getMemes();
-				Collection<Picture> memeuser = new ArrayList<Picture>();
-				for (Picture p : allPicture) {
+				Collection<Meme> allPicture = u.getMemes();
+				Collection<Meme> memeuser = new ArrayList<Meme>();
+				for (Meme p : allPicture) {
 					if (p.getIsMeme()) {
-						Picture pCopy = new Picture();
+						Meme pCopy = new Meme();
 						pCopy.setIsMeme(p.getIsMeme());
 						pCopy.setNamePicture(p.getNamePicture());
 						pCopy.setPath(p.getPath());
@@ -415,9 +415,9 @@ public class Facade {
 			System.out.println("suppression impossible l'user n'existe pas");
 			}
 		else {
-			Collection<Picture> allMemes = u.getMemes();
+			Collection<Meme> allMemes = u.getMemes();
 			System.out.println("suppression des memes");
-			for (Picture p : allMemes) {
+			for (Meme p : allMemes) {
 				u.removeImage(p);
 			}
 			System.out.println("suppression du user");
@@ -433,7 +433,7 @@ public class Facade {
 	public Collection<Comment> list_comment_picture(String namePicture){
 		System.out.println(namePicture);
 		int idp = Integer.parseInt(namePicture);
-		Picture meme = em.find(Picture.class, idp);
+		Meme meme = em.find(Meme.class, idp);
 		//if (meme.getComments().size() == 0) {
 
 		return meme.getComments();
@@ -448,7 +448,7 @@ public class Facade {
 		System.out.println("association du commentaire au user");
 		User writer = em.find(User.class, association.get("token"));
 
-		Picture meme = em.find(Picture.class, Integer.parseInt(association.get("idMeme")));
+		Meme meme = em.find(Meme.class, Integer.parseInt(association.get("idMeme")));
 
 		Comment c = new Comment(association.get("content"), writer, meme);
 		
