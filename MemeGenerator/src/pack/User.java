@@ -15,7 +15,7 @@ public class User {
     private String email;
     
     @OneToMany(mappedBy="Owner")
-    private Collection<Picture> Memes;
+    private Collection<Meme> Memes;
     
 
     /**
@@ -52,8 +52,8 @@ public class User {
     }
     */
 
-    public void removeImage(Picture image){
-        this.Memes.remove(image);
+    public void removeImage(Meme p){
+        this.Memes.remove(p);
     }
     
 
@@ -81,11 +81,11 @@ public class User {
         this.email = email;
     }
 
-	public Collection<Picture> getMemes() {
+	public Collection<Meme> getMemes() {
 		return Memes;
 	}
 
-	public void setMemes(Collection<Picture> memes) {
+	public void setMemes(Collection<Meme> memes) {
 		Memes = memes;
 	}
 

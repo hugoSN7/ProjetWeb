@@ -63,25 +63,27 @@ export default function Login({setToken}){
 
 
   return (
-  <><h1>Login</h1>
+  <><h1 id="login">Login</h1>
   <div>
   <form onSubmit={handleSubmit} >
+    <p class="connection">
   <label>
-        <p>Username</p>
-        <input type="text" onChange={(e) => setUsername(e.target.value)}  />
+        <p id="username" class="texte">Username</p>
+        <input id="setusername" type="text" onChange={(e) => setUsername(e.target.value)}  />
       </label>
       <label>
-        <p>Password</p>
-        <input type="password" onChange={(e) => setPassword(e.target.value)} />
+        <p id="password" class="texte">Password</p>
+        <input id="setpassword" type="password" onChange={(e) => setPassword(e.target.value)} />
       </label>
       <div>
-        <button type="submit">Sign in</button>
+        <button id="signinlogin" class="button" type="submit">Sign in</button>
       </div>
       <div>
-        <button type="click" onClick={signup}>sign up</button>
+        <button id="signuplogin" class="button" type="click" onClick={signup}>sign up</button>
       </div>
+    </p>
     </form>
-    </div>
+  </div>
     
     </>
   

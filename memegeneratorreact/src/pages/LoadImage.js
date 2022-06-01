@@ -1,6 +1,8 @@
 import React, { Component }  from 'react';
 import { useState, useEffect } from "react";
 import ReactDOM from 'react-dom';
+import '../WebContent/css/General.css';
+import '../WebContent/css/LoadImage.css';
 
 function ShowMessage(message) {
     alert(message);
@@ -39,8 +41,8 @@ export function LoadImage() {
     }*/
 
     return (
-        <div className="LoadImage">
-        <h1> List of Picture </h1>
+        <div id="ListTemplate" className="LoadImage">
+        <h1 id="texteList" class="texte"> List of Picture </h1>
         {allImg.map(pic => {
             return <img src={URL.createObjectURL(pic)} width="500"/>
         })}

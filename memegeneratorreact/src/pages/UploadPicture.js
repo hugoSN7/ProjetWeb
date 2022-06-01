@@ -379,9 +379,10 @@ function UploadPicture() {
         </div>
 
         {/*Tout ce qui gere la partie pour le contenu du meme */}
+        <p id="tabbord">
         <div id="mm-setting">
-        <button class="button" onClick={handleClick}> Add your Picture </button>
-        <button class="button" onClick={() => list()}> Load Template </button>
+        <button id="addpicture" class="button" onClick={handleClick}> Add your Picture </button>
+        <button id="loadtemplate" class="button" onClick={() => list()}> Load Template </button>
         <input type="file" name="image-upload" id="input" onChange={handleChange} style={{display: 'none'}} ref={hiddenFileInput}/>
         <br/>
         <div class="box-edit">
@@ -406,9 +407,10 @@ function UploadPicture() {
         <input type="text" id="idTag" value={tag} onChange={(e) => setTag(e.target.value)}/><br/><br/>
         <button class="button" onClick={handleGenerate}> Generate </button>
         </div>
+        </p>
 
         <div id="test">
-        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png" height="100"/>
+        <img id="staredad" src="https://i.postimg.cc/NMK5zHWV/staredaddetoure.png" height="200"/>
         </div>
         </>
     );

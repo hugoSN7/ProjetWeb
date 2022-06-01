@@ -32,10 +32,10 @@ public class Comment {
 	private String pseudo;
 	
 	@ManyToOne
-	private Picture meme;
+	private Meme meme;
 	
 
-	public Comment(String string, User writer2, Picture meme2) {
+	public Comment(String string, User writer2, Meme meme2) {
 		writer = writer2;
 		meme = meme2;
 		content = string;
@@ -66,11 +66,11 @@ public class Comment {
 		this.writer = writer;
 	}
 
-	public Picture getMeme() {
+	public Meme getMeme() {
 		return meme;
 	}
 
-	public void setMeme(Picture meme) {
+	public void setMeme(Meme meme) {
 		this.meme = meme;
 	}
 	

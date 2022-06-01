@@ -1,0 +1,10 @@
+#ListTemplate{
+    position: absolute;
+    top: 20%; left: 22%;
+}
+
+#texteList{
+    color: #e76f51;
+    font-size: 15px;
+    font-family: "South Australia", serif;
+}

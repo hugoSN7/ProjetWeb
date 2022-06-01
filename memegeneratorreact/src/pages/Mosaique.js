@@ -7,6 +7,8 @@ import UploadPicture from "./UploadPicture";
 //import 'reactjs-popup/dist/index.css';
 import Popup from '../component/Popup';
 import useToken from './useToken';
+import '../WebContent/css/General.css';
+import '../WebContent/css/Home.css';
 
 //pour ne faire qu'une fois un GET request
 var init = true;
@@ -242,7 +244,7 @@ export function Mosaic() {
           dataLength={scroller.length}
           next={fetchMoreData}
           hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
+          loader={<h4 id="loading">Loading...</h4>}
         >
           <div align="center">
           
@@ -273,7 +275,7 @@ export function Mosaic() {
                   
                 </div>}>
                 </Popup>}
-        <h4>No more meme available.</h4>
+        <h4 id="memeavai">No more meme available.</h4>
         
       </div>
     );

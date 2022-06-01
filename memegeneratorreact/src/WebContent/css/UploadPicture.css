@@ -1,6 +1,48 @@
 #staredad{
-    width: 250x;
     position: absolute;
     right: 0px;
     bottom: 0px;
+}
+
+#mm-preview{
+    position: absolute;
+    left: 25%;
+    top: 20%;
+}
+
+#tabbord{
+    background:#335F8A; 
+    border-radius: 30px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 300px;
+    height: 500px;
+    padding: 30px;
+    position: absolute;
+    top: 30%; left: 75%;
+    margin-left: -210px; /* (width + padding)/2 */
+    margin-top: -120px; /* (height + padding)/2 */
+}
+
+#addpicture{
+    width: 120px;
+    position: absolute;
+    top: 10%; left: 10%;
+}
+
+#loadtemplate{
+    width: 120px;
+    height: 100px;
+    position: absolute;
+    top: 10%; left: 55%;
+}
+
+#idMemeContent{
+    position: absolute;
+    top: 30%; left: 27%;
+}
+
+#generate{
+    position: absolute;
+    top: 50%; left: 22%;
 }

@@ -44,7 +44,7 @@ public class Facade {
 	@PersistenceContext
 	EntityManager em;
 	//"/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
-	private String pathToStore = "/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
+	private String pathToStore = "/home/ternardin/Documents/2A/ProjetWeb/memegeneratorreact/src/db/";
 	private String pathToGetMeme = "../db/meme/";
 	private String pathToGetTemplate = "../db/template/";
 	
@@ -451,8 +451,7 @@ public class Facade {
 		Meme meme = em.find(Meme.class, Integer.parseInt(association.get("idMeme")));
 
 		Comment c = new Comment(association.get("content"), writer, meme);
-		
-		//verif string !=null
+
 
 		if (writer==null | meme==null ) {System.out.println("association impossible");}
 		else {

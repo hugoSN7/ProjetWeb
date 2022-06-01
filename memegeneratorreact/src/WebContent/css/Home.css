@@ -1,3 +1,19 @@
-.home {
-    text-shadow:#ff006e 2.5px 2.5px 0,#8338ec 5px 5px 0,#3a86ff 7.5px 7.5px 0,#333 10px 10px 10px;color:#ffcc00;
+#home {
+    position: absolute;
+    color: #e76f51;
+    top: 15%; left: 1%;
+    font-size: 15px;
+    font-family: "South Australia", serif;
+}
+
+#loading{
+    color: #e76f51;
+    position: absolute;
+    top: 22%; left: 1%;
+}
+
+#memeavai{
+    color: #e76f51;
+    position: absolute;
+    top: 30%; left: 1%;
 }

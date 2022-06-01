@@ -38,24 +38,26 @@ export function Signup (){
     navigate("/compte");
   }
   return (
-  <><h1>Sign Up</h1>
+  <><h1 id="login" class="texte">Sign Up</h1>
+  <p class="connection">
   <form onSubmit={handleSubmit} >
   <label>
-        <p>Username</p>
-        <input type="text" onChange={(e) => setUsername(e.target.value)}  />
+        <p id="username">Username</p>
+        <input id="setusername" type="text" onChange={(e) => setUsername(e.target.value)}  />
       </label>
       <label>
-        <p>Password</p>
-        <input type="password" onChange={(e) => setPassword(e.target.value)} />
+        <p id="password">Password</p>
+        <input id="setpassword" type="password" onChange={(e) => setPassword(e.target.value)} />
       </label>
       <label>
-        <p>email</p>
-        <input type="text" onChange={(e) => setEmail(e.target.value)}  />
+        <p id="email">email</p>
+        <input id="setemail" type="text" onChange={(e) => setEmail(e.target.value)}  />
       </label>
       <div>
-        <button type="submit">Sign up</button>
+        <button id="signup" class="button" type="submit">Sign up</button>
       </div>
     </form>
+    </p>
     </>
   );
 }  

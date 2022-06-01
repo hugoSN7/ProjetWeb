@@ -8,6 +8,7 @@ const Contact = () => {
     <div>
 {/*       <h1 class="titre" id="contact">Contact</h1> */}
       <p id="mail" class="texte"> Nous contacter: uneadressem@il.com</p>
+      <img id="scott" src={require('../images/staredaddetoure.png')}/>
     </div>
   );
 };

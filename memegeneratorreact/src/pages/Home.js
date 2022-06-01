@@ -7,7 +7,7 @@ import React, { Component }  from 'react';
 const Home = () => {
   return (
     <div>
-    <h1 class="home">Home</h1>
+    <h1 id="home" class="texte">Home</h1>
     <Mosaic/>
     </div>
   )
