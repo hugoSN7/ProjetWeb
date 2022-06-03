@@ -22,7 +22,6 @@ public class Template {
 	private String namePicture;
 	
 	private String path;
-	private Boolean isMeme;
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -48,14 +47,6 @@ public class Template {
 		this.path = path;
 	}
 
-	public Boolean getIsMeme() {
-		return isMeme;
-	}
-
-	public void setIsMeme(Boolean isMeme) {
-		this.isMeme = isMeme;
-	}
-
 	public Collection<Tag> getTags() {
 		return tags;
 	}
@@ -67,7 +58,6 @@ public class Template {
 	public String toString() {
 		String str = namePicture;
 		str += "\n\t path : " + path;
-		str += "\n\t isMeme : " + isMeme;
 		if (tags != null) {
 			for (Tag t : tags) {
 				str += "\n\t tag : " + t.getMot();

@@ -25,7 +25,6 @@ public class Meme {
 	private String namePicture;
 	
 	private String path;
-	private Boolean isMeme;
 	
 	@ManyToOne
 	private User Owner;
@@ -62,14 +61,6 @@ public class Meme {
 		this.categories = tags;
 	}
 	
-	public Boolean getIsMeme() {
-		return isMeme;
-	}
-	
-	public void setIsMeme(Boolean isMeme) {
-		this.isMeme = isMeme;
-	}
-	
 	public int getIdPicture() {
 		return idMeme;
 	}
@@ -81,7 +72,6 @@ public class Meme {
 	public String toString() {
 		String str = namePicture;
 		str += "\n\t path : " + path;
-		str += "\n\t isMeme : " + isMeme;
 		if (categories != null) {
 			for (Category t : categories) {
 				str += "\n\t tag : " + t.getMot();
