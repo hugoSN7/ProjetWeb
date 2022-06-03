@@ -44,7 +44,7 @@ public class Facade {
 	@PersistenceContext
 	EntityManager em;
 	//"/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
-	private String pathToStore = "/home/ternardin/Documents/2A/ProjetWeb/memegeneratorreact/src/db/";
+	private String pathToStore = "/home/cedricazanove/n7/2sn/s8/applicationWeb/projet/ProjetWeb/memegeneratorreact/src/db/";
 	private String pathToGetMeme = "../db/meme/";
 	private String pathToGetTemplate = "../db/template/";
 	
@@ -156,8 +156,6 @@ public class Facade {
 			String fileName = input.getFormDataPart("name", String.class, null);
 			//On cree un file pour recuperer le file envoyé
 			File file = input.getFormDataPart("file", File.class, null);
-			//on regarde s'il s'agit d'un meme ou d'un template
-			Boolean isMeme = input.getFormDataPart("isMeme", Boolean.class, null);
 			//on récupere le token pour l'association au user
 			String token = input.getFormDataPart("token", String.class, null);
 			//On enregistre par la suite le file dans un dossier
@@ -166,27 +164,17 @@ public class Facade {
             byte[] bucket = new byte[size];
             picture.read(bucket);
             
-            try (FileOutputStream outputStream = new FileOutputStream(new File(pathToStore + (isMeme ? "/meme/": "/template/") + fileName))) {
+            try (FileOutputStream outputStream = new FileOutputStream(new File(pathToStore + "/meme/" + fileName))) {
                 outputStream.write(bucket);
                 outputStream.flush();
                 outputStream.close();
             }
             //On cree l'objet et on l'enregistre ds la db
             Meme pic = new Meme();
-            pic.setIsMeme(isMeme);
             pic.setNamePicture(fileName);
-            if (isMeme) {
-                pic.setPath(pathToGetMeme + fileName);
-            } else {
-            	pic.setPath(pathToGetTemplate + fileName);
-            }
-            if (isMeme) {
-                System.out.println("Meme ajouté");
-                System.out.println(pathToGetMeme + fileName);                
-            } else {
-            	System.out.println("Template ajouté");
-            	System.out.println(pathToGetTemplate + fileName);
-            }
+            pic.setPath(pathToGetMeme + fileName);
+            System.out.println("Meme ajouté");
+            System.out.println(pathToGetMeme + fileName);
             //on recupere les tags s'il existe
 			String categoryContent = input.getFormDataPart("tag", String.class, null);
 			if (categoryContent.equals("undefined")) {
@@ -235,8 +223,6 @@ public class Facade {
 			String fileName = input.getFormDataPart("name", String.class, null);
 			//On cree un file pour recuperer le file envoyé
 			File file = input.getFormDataPart("file", File.class, null);
-			//on regarde s'il s'agit d'un meme ou d'un template
-			Boolean isMeme = input.getFormDataPart("isMeme", Boolean.class, null);
 			//On enregistre par la suite le file dans un dossier
 			InputStream picture = new FileInputStream(file); 
             int size = picture.available();
@@ -250,7 +236,6 @@ public class Facade {
             }
             //On cree l'objet et on l'enregistre ds la db
             Template pic = new Template();
-            pic.setIsMeme(isMeme);
             pic.setNamePicture(fileName);
             pic.setPath(pathToGetMeme + fileName);
             System.out.println("Meme ajouté");
@@ -299,14 +284,10 @@ public class Facade {
 				Collection<Meme> allPicture = u.getMemes();
 				Collection<Meme> memeuser = new ArrayList<Meme>();
 				for (Meme p : allPicture) {
-					if (p.getIsMeme()) {
-						Meme pCopy = new Meme();
-						pCopy.setIsMeme(p.getIsMeme());
-						pCopy.setNamePicture(p.getNamePicture());
-						pCopy.setPath(p.getPath());
-						memeuser.add(pCopy);
-					}
-				
+					Meme pCopy = new Meme();
+					pCopy.setNamePicture(p.getNamePicture());
+					pCopy.setPath(p.getPath());
+					memeuser.add(pCopy);				
 				}
 				System.out.println("retour de la liste des memes");
 				return memeuser;
@@ -323,12 +304,11 @@ public class Facade {
     @Produces({ "application/json" })
 	public Collection<Template> listTemplate() {
 		System.out.println("Template");
-		Collection<Template> allTemplates = em.createQuery("from Template where isMeme = false", Template.class).getResultList();
+		Collection<Template> allTemplates = em.createQuery("from Template", Template.class).getResultList();
 		Collection<Template> allTemplatesToSend = new ArrayList<Template>();
 		for (Template p : allTemplates) {
 			System.out.println("template : " + p.toString());
 			Template pCopy = new Template();
-			pCopy.setIsMeme(p.getIsMeme());
 			pCopy.setNamePicture(p.getNamePicture());
 			pCopy.setPath(p.getPath());
 			allTemplatesToSend.add(pCopy);
@@ -349,12 +329,11 @@ public class Facade {
 			return listTemplate();
 		} else {
 			System.out.println("tag existant " + tag.toString());
-			Collection<Template> allTemplates = em.createQuery("SELECT p FROM Template p JOIN p.tags c WHERE c.mot = :word and p.isMeme = false").setParameter("word", mot).getResultList();
+			Collection<Template> allTemplates = em.createQuery("SELECT p FROM Template p JOIN p.tags c WHERE c.mot = :word").setParameter("word", mot).getResultList();
 			Collection<Template> allTemplatesToSend = new ArrayList<Template>();
 			for (Template p : allTemplates) {
 				System.out.println("template : " + p.toString());
 				Template pCopy = new Template();
-				pCopy.setIsMeme(p.getIsMeme());
 				pCopy.setNamePicture(p.getNamePicture());
 				pCopy.setPath(p.getPath());
 				allTemplatesToSend.add(pCopy);
@@ -371,12 +350,11 @@ public class Facade {
     @Produces({ "application/json" })
 	public Collection<Meme> listMeme() {
 		System.out.println("Meme");
-		Collection<Meme> allMemes = em.createQuery("from Meme where isMeme = true", Meme.class).getResultList();
+		Collection<Meme> allMemes = em.createQuery("from Meme", Meme.class).getResultList();
 		Collection<Meme> allMemesToSend = new ArrayList<Meme>();
 		for (Meme p : allMemes) {
 			System.out.println("meme : " + p.toString());
 			Meme pCopy = new Meme();
-			pCopy.setIsMeme(p.getIsMeme());
 			pCopy.setNamePicture(p.getNamePicture());
 			pCopy.setPath(p.getPath());
 			allMemesToSend.add(pCopy);
