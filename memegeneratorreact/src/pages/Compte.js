@@ -10,7 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import Pictureuser from './Pictureuser';
 
 function ShowMessage(message) {
-    alert(message);}
+    //alert(message);
+}
 
 function getToken(){
     const tokenString = localStorage.getItem('token');
@@ -31,7 +32,7 @@ async function invokePost(method, data, successMsg, failureMsg) {
     if (res.ok) ShowMessage(successMsg);
     else ShowMessage(failureMsg);
 }
-      
+
 
 
 function Compte (){

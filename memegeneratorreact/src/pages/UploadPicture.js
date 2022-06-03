@@ -18,7 +18,7 @@ var isYourTemplate = false;
 
 //pop une alerte
 function ShowAlert(message) {
-    alert(message);
+    //alert(message);
 }
 
 //get the token of the current user
@@ -34,7 +34,7 @@ function getToken(){
 
 //afficher un msg
 function ShowMessage(message) {
-    ReactDOM.render(<p>{message}</p>, document.getElementById("Message"));
+    //ReactDOM.render(<p>{message}</p>, document.getElementById("Message"));
 }
 
 //communiquer avec le serveur jboss
@@ -95,9 +95,11 @@ function List() {
 
     return (
         <>
+        <div id="listTemplate">
         <h1> List of Template </h1>
         <input type="search" id="idSearchTag" placeholder="Use a tag for more precision" name="" onChange={(e) => askTemplateWithTag(e.target.value)}></input><br/><br/>
         {templateList}
+        </div>
         </>
     )
 }
@@ -155,8 +157,8 @@ function updateMMPreview(url, text) {
     texts.push({ text: text, x: width / 2, y: height - yOffset });
     var StartX;
     var StartY;
-    var offsetX = canvas.offsetLeft;
-    var offsetY = canvas.offsetTop;
+    var offsetX = canvas.getBoundingClientRect().left;
+    var offsetY = canvas.getBoundingClientRect().top;
     var mouseX;
     var mouseY;
 
@@ -196,6 +198,7 @@ function updateMMPreview(url, text) {
     // test if x,y is inside the bounding box of texts[textIndex]
     function textHittest(x, y, textIndex) {
         var text = texts[textIndex];
+        ShowMessage("text.x : " + text.x + " text.y : " + text.y + " mouseX : " + x + " mouseY : " + y);
         return (x >= text.x - text.width && x <= text.x + text.width && y >= text.y - text.height && y <= text.y + text.height);
     }
     // handle mousedown events
@@ -331,7 +334,7 @@ function UploadPicture() {
     //Comportement du bouton Generate
     const handleGenerate = (event) => {
         if (memeName == null) {
-            ShowAlert("you have to give a name to your meme");
+            alert("you have to give a name to your meme");
         } else {
             //Recupere le canvas où est visualisé le futur meme
             var canvas = document.getElementById("canvas-mm-preview");
@@ -367,6 +370,9 @@ function UploadPicture() {
         <div id="Message">
         </div>
 
+        <div id="Template">
+        </div>
+
         <div id="Upload">
         </div>
 
@@ -398,7 +404,7 @@ function UploadPicture() {
         <>
         Can we keep your template ?
         <br/>
-        <input type="checkbox" id="decision" checked={decision} onChange={(e) => setDecision(e.target.value)}/>
+        <input type="checkbox" id="decision" checked={decision} onChange={(e) => setDecision(!decision)}/>
         <label for="decision">Yes</label><br/>
         <br/>
         </>

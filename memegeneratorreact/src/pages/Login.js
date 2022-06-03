@@ -7,8 +7,9 @@ import ReactDOM from 'react-dom';
 import Compte from "./Compte";
 
 function ShowMessage(message) {
-  alert(message);}
-  
+  //alert(message);
+}
+
 
 
 
@@ -42,13 +43,13 @@ export default function Login({setToken}){
   let navigate = useNavigate();
 
   const handleSubmit = async e => {
-    
+
     e.preventDefault();
     const re = await loginUser("authentification",username,password);
     if (re){
       setToken(username);
       navigate("/compte")
-    
+
     }
     else {
       ShowMessage("votre mot de passe ou votre identifiant est erroné");
@@ -84,11 +85,11 @@ export default function Login({setToken}){
     </p>
     </form>
   </div>
-    
+
     </>
-  
-  
-  
+
+
+
   );
 }
 

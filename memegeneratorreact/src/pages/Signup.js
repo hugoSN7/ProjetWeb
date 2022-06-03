@@ -5,7 +5,8 @@ import {Link, useNavigate} from "react-router-dom";
 import ReactDOM from 'react-dom';
 
 function ShowMessage(message) {
-  alert(message);}
+  //alert(message);}
+}
 
 async function invokePost(method, data, successMsg, failureMsg) {
   const requestOptions = {
@@ -27,14 +28,14 @@ export function Signup (){
 
 
   const handleSubmit = async (event) => {
-    
+
     event.preventDefault();
     let user={
      pseudo : username,
      password : password,
      email : emails
     };
-    invokePost("adduser", user, "ajout de l'user fait", "ajout du test echoué"); 
+    invokePost("adduser", user, "ajout de l'user fait", "ajout du test echoué");
     navigate("/compte");
   }
   return (
@@ -60,6 +61,6 @@ export function Signup (){
     </p>
     </>
   );
-}  
+}
 export default Signup;
-  
+

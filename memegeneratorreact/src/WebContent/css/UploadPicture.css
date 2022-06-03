@@ -6,8 +6,9 @@
 
 #mm-preview{
     position: absolute;
-    left: 25%;
+    left: 23%;
     top: 20%;
+    right: 50%
 }
 
 #tabbord{
@@ -31,8 +32,8 @@
 }
 
 #loadtemplate{
-    width: 120px;
-    height: 100px;
+    width: 115px;
+    height: 95px;
     position: absolute;
     top: 10%; left: 55%;
 }
@@ -45,4 +46,9 @@
 #generate{
     position: absolute;
     top: 50%; left: 22%;
+}
+
+#listTemplate{
+    position: absolute;
+    top: 20%; left: 10%; right: 50%;
 }
